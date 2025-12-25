@@ -1,6 +1,6 @@
 build:
-	sudo docker build -t pycades-app .
+	sudo docker compose up --build -d
 stop:
-	sudo docker stop pycades-app
+	sudo docker compose down
 start:
-	make stop && sudo docker run -p 8004:8000 pycades-app
+	docker-compose up -d

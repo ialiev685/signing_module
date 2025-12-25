@@ -1,13 +1,12 @@
 FROM ubuntu:22.04
 
 RUN apt-get update && apt install -y \ 
-    cmake build-essential libboost-all-dev python3-dev unzip git 
+    cmake build-essential libboost-all-dev python3-dev unzip git python3-pip 
 
-RUN mkdir -p /app
+
 
 COPY ./cryptopro_packages /tmp/cryptopro
 
-COPY ./main.py /app/
 
 WORKDIR /tmp/cryptopro
 
@@ -27,12 +26,20 @@ RUN unzip pycades-main.zip && \
     cmake .. && \
     make -j4
 
-RUN cp -r /tmp/cryptopro/pycades-main/build/ /app/
+RUN mkdir -p /app/lib/pycades/
+RUN mkdir -p /app/src/
+
+RUN cp -r /tmp/cryptopro/pycades-main/build/* /app/lib/pycades
 
 RUN rm -rf /tmp/*
 
 WORKDIR /app
 
-ENV PYTHONPATH="/app/build"
+COPY src/ ./src/
+COPY requirements.txt .
 
-CMD ["python3", "main.py"]
+RUN pip install --no-cache-dir -r requirements.txt
+
+ENV PYTHONPATH="/app/lib/pycades"
+
+CMD ["fastapi", "run", "src/main.py"]
