@@ -1,12 +1,10 @@
-import pycades
-
 from fastapi import FastAPI
+from core import pycades_engine
 
 app = FastAPI()
-
-# print("pycades импортирован успешно, версия:", pycades.ModuleVersion())
 
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+
+    return {"result": "hello world"}
