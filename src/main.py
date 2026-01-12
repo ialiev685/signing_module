@@ -1,10 +1,6 @@
-from fastapi import FastAPI
-from core import pycades_engine
+from fastapi import FastAPI, UploadFile
+from api.create_hash import router
+
 
 app = FastAPI()
-
-
-@app.get("/")
-async def root():
-
-    return {"result": "hello world"}
+app.include_router(router)

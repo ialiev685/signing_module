@@ -2,7 +2,7 @@ from typing import Callable, Type
 
 
 class HashedData:
-    Algorithm: Callable[[int], None]
+    Algorithm: int
     Hash: Callable[[str], None]
     Value: str
 
@@ -13,6 +13,5 @@ class CadesSignedData:
 
 class Pycades:
     CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_256: int
-
     HashedData: Type[HashedData]
     CadesSignedData: Type[CadesSignedData]
