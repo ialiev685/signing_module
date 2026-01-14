@@ -1,5 +1,5 @@
 from fastapi import FastAPI, UploadFile
-from api.create_hash import router
+from routes import router
 
 
 app = FastAPI()
