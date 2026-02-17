@@ -41,5 +41,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 ENV PYTHONPATH="/app/lib/pycades"
-
-CMD ["fastapi", "run", "src/main.py"]
+# для dev режима
+# CMD ["fastapi", "run", "src/main.py"]
+# для prod режима
+CMD ["fastapi", "dev", "src/main.py", "--host", "0.0.0.0", "--port", "8000"]

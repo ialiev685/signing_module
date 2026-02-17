@@ -11,4 +11,7 @@ services:
       - "8004:8000"
     environment:
       - PYTHONPATH=/app/lib/pycades
+    # для dev режима
+    command: fastapi dev src/main.py --host 0.0.0.0 --port 8000 --reload
+
 
