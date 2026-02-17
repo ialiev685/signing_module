@@ -1,9 +1,10 @@
 from fastapi import UploadFile, APIRouter
 from typing import Annotated
 import base64
+from lib.decode_detached_signature import DecodeDetachedSignature
 from lib.convert_file_to_base64 import convert_file_to_base64
 from pycades_api import create_hash_by_base64, verify_signature_by_hash
-import hashlib
+import os
 
 router = APIRouter(prefix="/api/v1")
 
@@ -33,10 +34,19 @@ async def verify_signature(
     document_content = await convert_file_to_base64(document)
     hash = create_hash_by_base64(document_content)
     detached_signature_content = await convert_file_to_base64(detached_signature)
-    print("hash", hash)
+
     result = verify_signature_by_hash(
         signed_message=detached_signature_content, hash=hash
     )
-    print("result", result)
 
-    return {"result": "done"}
+    return {"result": result["valid"]}
+
+
+@router.get(
+    "/decoded_signature",
+    summary="Данные открепленной подписи",
+)
+async def decoded_signature():
+    decodedDetachedSignature = DecodeDetachedSignature()
+
+    return {"data": ""}
