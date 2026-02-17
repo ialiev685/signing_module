@@ -1,7 +1,16 @@
 from pycades_engine import pycades_engine
+from typing import TypedDict
+from pyasn1.codec.ber import decoder
+from pyasn1_modules import rfc5652, rfc2315
 
 
-def verify_signature_by_hash(signed_message: str, hash: str):
+class ReturnVerifySignatureByHash(TypedDict):
+    valid: bool
+
+
+def verify_signature_by_hash(
+    signed_message: str, hash: str
+) -> ReturnVerifySignatureByHash:
     """
     Docstring для verify_signature_by_hash
 
@@ -18,6 +27,9 @@ def verify_signature_by_hash(signed_message: str, hash: str):
 
     signingTypeCode = signedData.GetMsgType(signed_message)
 
-    result = signedData.VerifyHash(hashed_data, signed_message, signingTypeCode)
+    try:
+        result = signedData.VerifyHash(hashed_data, signed_message, signingTypeCode)
+        return {"valid": True}
+    except:
 
-    return result
+        return {"valid": False}
