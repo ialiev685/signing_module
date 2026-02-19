@@ -1,10 +1,10 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class SubjectInfoModel(BaseModel):
     oid: str
     translation: str
-    nameCode: str
+    name_code: str
     value: str
 
 

@@ -1,4 +1,4 @@
-from types_pycades import Pycades
+from pycades_types import Pycades
 import pycades  # type: ignore
 from typing import cast
 
