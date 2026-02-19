@@ -1,5 +1,4 @@
 from pyasn1.codec.der import decoder
-from pyasn1.codec.ber import decoder as decode_ber
 
 # Cryptographic Message Syntax (CMS)
 from pyasn1_modules import rfc5652, rfc2315  # type: ignore
@@ -7,14 +6,12 @@ from pyasn1_modules import rfc5652, rfc2315  # type: ignore
 # Internet X.509 Public Key Infrastructure Certificate and Certificate
 from pyasn1_modules import rfc5280  #
 
-import os
-from .configs import SUBJECT_OIDS
-from .model_types import SubjectInfoModel, SubjectDataModel
+from .oid_configs import SUBJECT_OIDS, OID_SIGNED_DATA
+from .action_models import SubjectInfoModel, SubjectDataModel
 
 
 path_signature = "src/test_signature/test_detached_signature.sig"
 out_path_logs = "src/test_signature/logs.txt"
-oid_signed_data = "1.2.840.113549.1.7.2"  # contentType
 
 
 class Certificate:
@@ -66,17 +63,24 @@ class DecodeDetachedSignature:
 
                 if (
                     isinstance(decoded_value, rfc5652.ContentInfo)
-                    and str(decoded_value["contentType"]) == oid_signed_data
+                    and str(decoded_value["contentType"]) == OID_SIGNED_DATA
                 ):
-
                     signed_data, _ = decoder.decode(
                         decoded_value["content"], rfc5652.SignedData()
                     )
-                    certificates = signed_data["certificates"]  # list
-
-                    for cert in certificates:
-                        certificate = Certificate(certificate=cert)
-                        print("cert", certificate.subject.model_dump())
+                    self.signed_data = signed_data
 
             except Exception as error:
-                print("error by decode content info: ", error)
+                print("Ошибка при декодировании подписи (signed_data): ", error)
+
+    @property
+    def signers_certificate_chain(self) -> list[SubjectDataModel]:
+        certificates_chain: list[SubjectDataModel] = []
+
+        if self.signed_data:
+            certificates = self.signed_data["certificates"]  # list
+            for cert in certificates:
+                certificate = Certificate(certificate=cert)
+                certificates_chain.append(certificate.subject)
+
+        return certificates_chain

@@ -1,10 +1,11 @@
-from fastapi import UploadFile, APIRouter
+from fastapi import UploadFile, APIRouter, status
 from typing import Annotated
 import base64
-from libs.decode_detached_signature import DecodeDetachedSignature
-from libs.convert_file_to_base64 import convert_file_to_base64
+from utils.decode_detached_signature import DecodeDetachedSignature
+from utils.convert_file_to_base64 import convert_file_to_base64
 from pycades_api import create_hash_by_base64, verify_signature_by_hash
-import os
+from route_models import DecodedSignature
+
 
 router = APIRouter(prefix="/api/v1")
 
@@ -45,8 +46,12 @@ async def verify_signature(
 @router.get(
     "/decoded_signature",
     summary="Данные открепленной подписи",
+    response_model=DecodedSignature,
+    status_code=status.HTTP_200_OK,
 )
 async def decoded_signature():
     decodedDetachedSignature = DecodeDetachedSignature()
 
-    return {"data": ""}
+    return {
+        "signers_certificate_chain": decodedDetachedSignature.signers_certificate_chain
+    }
