@@ -54,8 +54,7 @@ async def verify_signature(
 async def decoded_signature():
     decodedDetachedSignature = DecodeDetachedSignature()
 
-    decodedDetachedSignature.signer_info
-
     return {
-        "signers_certificate_chain": decodedDetachedSignature.signers_certificates_chain
+        "certificate_chain": decodedDetachedSignature.certificates_chain,
+        "issuer": decodedDetachedSignature.issuer,
     }

@@ -16,3 +16,9 @@ class ResponseDataModel(BaseModel):
 class CertificatesChainsModel(BaseModel):
     subject: ResponseDataModel
     issuer: ResponseDataModel
+    serial_number: str | None
+
+
+class IssuerModel(BaseModel):
+    issuer: ResponseDataModel
+    serial_number: str | None

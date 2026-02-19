@@ -4,7 +4,7 @@ from pyasn1.codec.der import decoder
 from pyasn1_modules import rfc5652, rfc2315  # type: ignore
 
 # Internet X.509 Public Key Infrastructure Certificate and Certificate
-from pyasn1_modules import rfc5280  #
+from pyasn1_modules import rfc5280
 
 from ..oid_configs import SUBJECT_OIDS
 from ..action_models import AttributeValueModel, ResponseDataModel
@@ -30,7 +30,6 @@ class DecodeCertificateAttributes:
     certificate: rfc5280.Name
 
     def __init__(self, certificate: rfc5652.CertificateChoices):
-
         try:
             self.certificate = certificate
 
@@ -40,7 +39,6 @@ class DecodeCertificateAttributes:
     @property
     def certificate_info(self) -> ResponseDataModel:
         values = None
-
         try:
 
             issuer_rdn_attributes = self.certificate["rdnSequence"]
