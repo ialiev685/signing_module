@@ -47,7 +47,7 @@ async def verify_signature(
 
 @router.get(
     "/decoded_signature",
-    summary="Данные открепленной подписи",
+    summary="Данные открепленной подписи (временный)",
     response_model=DecodedSignature,
     status_code=status.HTTP_200_OK,
 )

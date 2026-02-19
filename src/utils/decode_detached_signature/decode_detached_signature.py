@@ -5,7 +5,7 @@ from pyasn1_modules import rfc5652, rfc2315  # type: ignore
 
 from utils.decode_detached_signature.decode_certificate import DecodeCertificate  #
 from ..oid_configs import OID_SIGNED_DATA
-from ..action_models import SubjectDataModel
+from ..action_models import CertificateInfoModel
 
 
 path_signature = "src/test_signature/test_detached_signature.sig"
@@ -35,13 +35,13 @@ class DecodeDetachedSignature:
                 print("Ошибка при декодировании подписи (signed_data): ", error)
 
     @property
-    def signers_certificate_chain(self) -> list[SubjectDataModel]:
-        certificates_chain: list[SubjectDataModel] = []
+    def signers_certificate_chain(self) -> list[CertificateInfoModel]:
+        certificates_chain: list[CertificateInfoModel] = []
 
         if self.signed_data:
             certificates = self.signed_data["certificates"]  # list
             for cert in certificates:
                 certificate = DecodeCertificate(certificate=cert)
-                certificates_chain.append(certificate.subject)
+                certificates_chain.append(certificate.certificate_info)
 
         return certificates_chain

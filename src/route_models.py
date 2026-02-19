@@ -1,6 +1,6 @@
 from pydantic import BaseModel
-from utils.action_models import SubjectDataModel
+from utils.action_models import CertificateInfoModel
 
 
 class DecodedSignature(BaseModel):
-    signers_certificate_chain: list[SubjectDataModel]
+    signers_certificate_chain: list[CertificateInfoModel]

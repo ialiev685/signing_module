@@ -1,13 +1,13 @@
 from pydantic import BaseModel
 
 
-class SubjectInfoModel(BaseModel):
+class AttributeValueModel(BaseModel):
     oid: str
     translation: str
     name_code: str
     value: str
 
 
-class SubjectDataModel(BaseModel):
-    is_success: bool
-    data: list[SubjectInfoModel]
+class CertificateInfoModel(BaseModel):
+    subject: list[AttributeValueModel] | None
+    issuer: list[AttributeValueModel] | None
