@@ -8,6 +8,11 @@ class AttributeValueModel(BaseModel):
     value: str
 
 
-class CertificateInfoModel(BaseModel):
-    subject: list[AttributeValueModel] | None
-    issuer: list[AttributeValueModel] | None
+class ResponseDataModel(BaseModel):
+    is_success: bool
+    data: list[AttributeValueModel] | None
+
+
+class CertificatesChainsModel(BaseModel):
+    subject: ResponseDataModel
+    issuer: ResponseDataModel
