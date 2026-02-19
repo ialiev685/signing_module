@@ -1,7 +1,9 @@
 from fastapi import UploadFile, APIRouter, status
 from typing import Annotated
 import base64
-from utils.decode_detached_signature import DecodeDetachedSignature
+from utils.decode_detached_signature.decode_detached_signature import (
+    DecodeDetachedSignature,
+)
 from utils.convert_file_to_base64 import convert_file_to_base64
 from pycades_api import create_hash_by_base64, verify_signature_by_hash
 from route_models import DecodedSignature
