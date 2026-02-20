@@ -57,4 +57,5 @@ async def decoded_signature():
     return {
         "certificate_chain": decodedDetachedSignature.certificates_chain,
         "issuer": decodedDetachedSignature.issuer,
+        "signing_time": decodedDetachedSignature.signing_time,
     }

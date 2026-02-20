@@ -6,7 +6,7 @@ from pyasn1_modules import rfc5652, rfc2315, rfc5280  # type: ignore
 from utils.decode_detached_signature.decode_certificate_attributes import (
     DecodeCertificateAttributes,
 )  #
-from ..oid_configs import OID_SIGNED_DATA
+from ..oid_configs import OID_SIGNED_DATA, SIGNING_TIME_OID
 from ..action_models import CertificatesChainsModel, IssuerModel
 from .convert_integer_to_hex import convert_integer_to_hex
 from .format_asn1_time import format_asn1_time
@@ -75,7 +75,7 @@ class DecodeDetachedSignature:
 
     @property
     def issuer(self) -> list[IssuerModel]:
-        signer_list: list[IssuerModel] = []
+        issuer_list: list[IssuerModel] = []
         if self.signed_data:
             try:
                 signer_infos = self.signed_data["signerInfos"]
@@ -87,7 +87,7 @@ class DecodeDetachedSignature:
                     issuer_certificate = DecodeCertificateAttributes(
                         certificate=signer["sid"]["issuerAndSerialNumber"]["issuer"]
                     )
-                    signer_list.append(
+                    issuer_list.append(
                         IssuerModel(
                             issuer=issuer_certificate.certificate_info,
                             serial_number=serial_number,
@@ -95,6 +95,29 @@ class DecodeDetachedSignature:
                     )
 
             except KeyError as error:
-                print("Ошибка при обращении к методу 'signer': ", error)
+                print("Ошибка при обращении к методу 'issuer': ", error)
 
-        return signer_list
+        return issuer_list
+
+    @property
+    def signing_time(self) -> str | None:
+        value = None
+        if self.signed_data:
+            try:
+                signer_infos = self.signed_data["signerInfos"]
+                value_encoded = next(
+                    (
+                        attr["attrValues"]
+                        for attr in signer_infos[0]["signedAttrs"]
+                        if str(attr["attrType"]) == SIGNING_TIME_OID
+                    ),
+                    None,
+                )
+                if value_encoded:
+                    value_decoded, _ = decoder.decode(value_encoded[0])
+                    value = format_asn1_time(value_decoded)
+
+            except KeyError as error:
+                print("Ошибка при обращении к методу 'signing_time': ", error)
+
+        return value
