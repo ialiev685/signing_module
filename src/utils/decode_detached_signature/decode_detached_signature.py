@@ -9,6 +9,7 @@ from utils.decode_detached_signature.decode_certificate_attributes import (
 from ..oid_configs import OID_SIGNED_DATA
 from ..action_models import CertificatesChainsModel, IssuerModel
 from .convert_integer_to_hex import convert_integer_to_hex
+from .format_asn1_time import format_asn1_time
 
 path_signature = "src/test_signature/test_detached_signature.sig"
 
@@ -54,12 +55,17 @@ class DecodeDetachedSignature:
                     subject_certificate = DecodeCertificateAttributes(
                         certificate=cert["certificate"]["tbsCertificate"]["subject"]
                     )
+                    date = cert["certificate"]["tbsCertificate"]["validity"]
+                    valid_from_date = format_asn1_time(date["notBefore"]["utcTime"])
+                    valid_to_date = format_asn1_time(date["notAfter"]["utcTime"])
 
                     certificates_chain_list.append(
                         CertificatesChainsModel(
                             issuer=issuer_certificate.certificate_info,
                             subject=subject_certificate.certificate_info,
                             serial_number=serial_number,
+                            valid_from_date=valid_from_date,
+                            valid_to_date=valid_to_date,
                         )
                     )
             except KeyError as error:
