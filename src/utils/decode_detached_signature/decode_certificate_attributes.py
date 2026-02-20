@@ -4,7 +4,9 @@ from pyasn1_modules import rfc5652  # type: ignore
 # Internet X.509 Public Key Infrastructure Certificate and Certificate
 from pyasn1_modules import rfc5280
 
-from .parse_attributes_value import parse_attributes_value
+from .parse_attributes_value_from_certificate import (
+    parse_attributes_value_from_certificate,
+)
 from ..action_models import ResponseDataModel
 
 
@@ -25,7 +27,9 @@ class DecodeCertificateAttributes:
 
             issuer_rdn_attributes = self.certificate["rdnSequence"]
             if isinstance(issuer_rdn_attributes, rfc5280.RDNSequence):
-                values = parse_attributes_value(rdn_attributes=issuer_rdn_attributes)
+                values = parse_attributes_value_from_certificate(
+                    rdn_attributes=issuer_rdn_attributes
+                )
         except KeyError as error:
             print("Ошибка при получении значений атрибутов сертификата: ", error)
             return ResponseDataModel(is_success=False, data=values)

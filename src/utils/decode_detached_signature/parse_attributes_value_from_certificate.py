@@ -8,7 +8,7 @@ from ..oid_configs import SUBJECT_OIDS
 from ..action_models import AttributeValueModel, ResponseDataModel
 
 
-def parse_attributes_value(
+def parse_attributes_value_from_certificate(
     rdn_attributes: rfc5280.RDNSequence,
 ) -> list[AttributeValueModel]:
     values: list[AttributeValueModel] = []
