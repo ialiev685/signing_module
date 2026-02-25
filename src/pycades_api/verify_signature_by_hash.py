@@ -25,7 +25,7 @@ def verify_signature_by_hash(
     #     # pycades_engine.CAPICOM_CA_STORE,
     #     pycades_engine.CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED,
     # )
-    # print(f"Корневых сертификатов: {store.Certificates.Count}")
+    # print(f"Cертификатов: {store.Certificates.Count}")
 
     # certs = store.Certificates
 

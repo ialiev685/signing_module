@@ -33,13 +33,13 @@ class Pycades:
     CADESCOM_BASE64_TO_BINARY: int
 
     # 1 параметр для Open
-    CAPICOM_CURRENT_USER_STORE: int
-    CAPICOM_LOCAL_MACHINE_STORE: int
+    CAPICOM_CURRENT_USER_STORE: int  # хранилище юзера
+    CAPICOM_LOCAL_MACHINE_STORE: int  # локальное хранилище машины
     CADESCOM_CONTAINER_STORE: int
     # 2 параметр для Open
-    CAPICOM_MY_STORE: str
-    CAPICOM_CA_STORE: str
-    CAPICOM_ROOT_STORE: str
+    CAPICOM_MY_STORE: str  # личные сертификаты
+    CAPICOM_CA_STORE: str  # промежуточные сертификаты
+    CAPICOM_ROOT_STORE: str  # корневые сертификаты
     # 3 параметр для Open
     CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED: int
 
