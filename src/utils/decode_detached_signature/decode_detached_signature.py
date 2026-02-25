@@ -1,4 +1,4 @@
-from pyasn1.codec.der import decoder
+from pyasn1.codec.ber import decoder
 
 # Cryptographic Message Syntax (CMS)
 from pyasn1_modules import rfc5652, rfc2315, rfc5280  # type: ignore
@@ -11,7 +11,8 @@ from ..action_models import CertificatesChainsModel, IssuerModel
 from .convert_integer_to_hex import convert_integer_to_hex
 from .format_asn1_time import format_asn1_time
 
-path_signature = "src/test_signature/test_detached_signature.sig"
+# path_signature = "src/test_signature/test_detached_signature.sig"
+path_signature = "src/test_signature/test1_pdf.p7s"
 
 
 class DecodeDetachedSignature:
@@ -24,10 +25,9 @@ class DecodeDetachedSignature:
                 decoded_value, _ = decoder.decode(
                     file.read(), asn1Spec=rfc5652.ContentInfo()
                 )
-
                 if (
                     isinstance(decoded_value, rfc5652.ContentInfo)
-                    and str(decoded_value["contentType"]) == OID_SIGNED_DATA
+                    and decoded_value["contentType"] == rfc5652.id_signedData
                 ):
                     signed_data, _ = decoder.decode(
                         decoded_value["content"], rfc5652.SignedData()
