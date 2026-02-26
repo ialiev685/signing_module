@@ -1,5 +1,4 @@
 from typing import Dict, TypedDict
-from enum import Enum
 
 
 class AlgorithmInfo(TypedDict):

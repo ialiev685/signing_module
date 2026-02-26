@@ -1,3 +1,4 @@
+from pycades_api.signed_data_processor import SignedDataProcessor
 from pycades_engine import pycades_engine
 from typing import TypedDict
 
@@ -44,7 +45,8 @@ def verify_signature_by_hash(
 
     try:
         signedData.VerifyHash(hashed_data, signed_message, signingTypeCode)
-        print("result", signedData)
+        signedDataProcessor = SignedDataProcessor(signedData)
+
         return {"valid": True}
     except Exception as error:
         print("error", error)

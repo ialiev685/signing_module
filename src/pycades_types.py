@@ -1,4 +1,6 @@
-from typing import Callable, Type
+from typing import Callable, Type, Generic, TypeVar
+
+T = TypeVar("T")
 
 
 class HashedData:
@@ -9,23 +11,46 @@ class HashedData:
     SetHashValue: Callable[[str], None]
 
 
-class SignedData:
-    GetMsgType: Callable[[str], int]
-    VerifyHash: Callable[[HashedData, str, int], dict]
+class RequestDataByItem(Generic[T]):
+    Count: int
+    Item: Callable[[int], T]
+
+
+class OID:
+    name: str
+    OID: str
+
+
+class ExtendedKeyUsage(Generic[T]):
+    EKUs: RequestDataByItem[OID]
 
 
 class Certificate:
     SubjectName: str
     IssuerName: str
+    Thumbprint: str
+    ValidFromDate: str
+    ValidToDate: str
+    SerialNumber: str
+    ExtendedKeyUsage: Callable[[], ExtendedKeyUsage]
+
+
+class Signers:
+    Certificate: Certificate
+    SignatureTimeStampTime: str
+    SigningTime: str
 
 
 class Store:
-    class CertificateCollections:
-        Count: int
-        Item: Callable[[int], Certificate]
-
-    Certificates: CertificateCollections
+    Certificates: RequestDataByItem[Certificate]
     Open: Callable[[int, str, int], None]
+
+
+class SignedData:
+    GetMsgType: Callable[[str], int]
+    VerifyHash: Callable[[HashedData, str, int], dict]
+    Certificates: RequestDataByItem[Certificate]
+    Signers: RequestDataByItem[Signers]
 
 
 class Pycades:
