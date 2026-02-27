@@ -1,5 +1,5 @@
-from dict_types import SigningStructureDict
-
+from models_types import CertificateInfoModel, SignersModel, SigningStructureModel
+from .safe_get_pycades_attr import safe_get_com_attr
 from .get_data_after_processing_item import get_data_after_processing_item
 from .get_oids_from_certificate import get_oids_from_certificate
 from pycades_types import SignedData, Certificate
@@ -12,7 +12,6 @@ class SignedDataProcessor:
 
     def _get_certificates_chain(self) -> list[Certificate] | None:
         try:
-
             return get_data_after_processing_item(
                 object_data=self._signed_data.Certificates
             )
@@ -24,25 +23,48 @@ class SignedDataProcessor:
             return None
 
     @property
-    def issuer(self):
+    def issuer(self) -> list[SignersModel] | None:
         try:
-            return get_data_after_processing_item(object_data=self._signed_data.Signers)
+            processed_data = get_data_after_processing_item(
+                object_data=self._signed_data.Signers
+            )
+
+            return [
+                SignersModel(
+                    subject_name=certificate.Certificate.SubjectName,
+                    serial_number=certificate.Certificate.SerialNumber,
+                    thumbprint=certificate.Certificate.Thumbprint,
+                    issuer_name=certificate.Certificate.IssuerName,
+                    valid_from_date=certificate.Certificate.ValidFromDate,
+                    valid_to_date=certificate.Certificate.ValidToDate,
+                    signature_timestamp_time=safe_get_com_attr(
+                        object=certificate, attr_name="SignatureTimeStampTime"
+                    ),
+                    signing_time=certificate.SigningTime,
+                )
+                for certificate in processed_data
+            ]
         except Exception as error:
             print("Ошибка при вызове метода SignedDataProcessor.issuer", error)
             return None
 
     @property
-    def certificates_chain_with_oids(self):
+    def certificates_chain_with_oids(self) -> list[CertificateInfoModel] | None:
         try:
             certificates_chain = self._get_certificates_chain()
             if certificates_chain:
                 result = []
                 for certificate in certificates_chain:
                     result.append(
-                        {
-                            "certificate": certificate,
-                            "oids": get_oids_from_certificate(certificate),
-                        }
+                        CertificateInfoModel(
+                            subject_name=certificate.SubjectName,
+                            serial_number=certificate.SerialNumber,
+                            thumbprint=certificate.Thumbprint,
+                            issuer_name=certificate.IssuerName,
+                            valid_from_date=certificate.ValidFromDate,
+                            valid_to_date=certificate.ValidToDate,
+                            oids=get_oids_from_certificate(certificate),
+                        )
                     )
                 return result
             return None
@@ -54,19 +76,22 @@ class SignedDataProcessor:
             return None
 
     @property
-    def signing_structure(self) -> SigningStructureDict:
+    def signing_structure(self) -> SigningStructureModel:
 
-        issuer_data = self.issuer[0]
-        signature_time_stampTime = None
+        signature_timestamp_time = (
+            self.issuer[0].signature_timestamp_time
+            if self.issuer and len(self.issuer) > 0
+            else None
+        )
+        signing_time = (
+            self.issuer[0].signing_time
+            if self.issuer and len(self.issuer) > 0
+            else None
+        )
 
-        try:
-            signature_time_stampTime = issuer_data.SignatureTimeStampTime
-        except:
-            pass
-
-        return {
-            "certificates_chain": self.certificates_chain_with_oids,
-            "issuer": self.issuer,
-            "SignatureTimeStampTime": signature_time_stampTime,
-            "SigningTime": issuer_data.SigningTime,
-        }
+        return SigningStructureModel(
+            certificates_chain=self.certificates_chain_with_oids,
+            issuer=self.issuer,
+            signature_timestamp_time=signature_timestamp_time,
+            signing_time=signing_time,
+        )

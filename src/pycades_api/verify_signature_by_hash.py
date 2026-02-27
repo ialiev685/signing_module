@@ -1,17 +1,9 @@
-from dict_types import SigningStructureDict
 from pycades_api.signed_data_processor import SignedDataProcessor
 from pycades_engine import pycades_engine
-from typing import TypedDict
+from models_types import ResponseModel
 
 
-class ReturnVerifySignatureByHash(TypedDict):
-    valid: bool
-    data: SigningStructureDict | None
-
-
-def verify_signature_by_hash(
-    signed_message: str, hash: str
-) -> ReturnVerifySignatureByHash:
+def verify_signature_by_hash(signed_message: str, hash: str) -> ResponseModel:
     """
     Docstring для verify_signature_by_hash
 
@@ -48,10 +40,10 @@ def verify_signature_by_hash(
     try:
         signedData.VerifyHash(hashed_data, signed_message, signingTypeCode)
 
-        return {
-            "valid": True,
-            "data": SignedDataProcessor(signedData).signing_structure,
-        }
+        return ResponseModel(
+            is_valid=True,
+            data=SignedDataProcessor(signed_data=signedData).signing_structure,
+        )
     except Exception as error:
         print("Ошибка при вызове метода verify_signature_by_hash", error)
-        return {"valid": False, "data": None}
+        return ResponseModel(is_valid=False, data=None)

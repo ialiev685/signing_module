@@ -4,8 +4,8 @@ from pyasn1.codec.der import decoder
 # Internet X.509 Public Key Infrastructure Certificate and Certificate
 from pyasn1_modules import rfc5280  # type: ignore
 
-from ..oid_configs import SUBJECT_OIDS
-from ..action_models import AttributeValueModel, ResponseDataModel
+from pycades_api.constants import SUBJECT_OIDS
+from models_types import AttributeValueModel, ResponseDataModel
 
 
 def parse_attributes_value_from_certificate(

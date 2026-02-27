@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from utils.action_models import CertificatesChainsModel, IssuerModel
+from models_types import CertificatesChainsModel, IssuerModel
 
 
 class DecodedSignature(BaseModel):

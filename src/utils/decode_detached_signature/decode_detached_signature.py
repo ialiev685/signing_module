@@ -6,8 +6,8 @@ from pyasn1_modules import rfc5652, rfc2315, rfc5280  # type: ignore
 from utils.decode_detached_signature.decode_certificate_attributes import (
     DecodeCertificateAttributes,
 )  #
-from ..oid_configs import OID_SIGNED_DATA, SIGNING_TIME_OID
-from ..action_models import CertificatesChainsModel, IssuerModel
+from pycades_api.constants import OID_SIGNED_DATA, SIGNING_TIME_OID
+from models_types import CertificatesChainsModel, IssuerModel
 from .convert_integer_to_hex import convert_integer_to_hex
 from .format_asn1_time import format_asn1_time
 

@@ -1,6 +1,8 @@
 from fastapi import UploadFile, APIRouter, status
 from typing import Annotated
 import base64
+
+from models_types import ResponseModel
 from utils.decode_detached_signature.decode_detached_signature import (
     DecodeDetachedSignature,
 )
@@ -29,6 +31,8 @@ async def create_hash(
 @router.post(
     "/verify_signature",
     summary="Проверка подписи",
+    status_code=status.HTTP_200_OK,
+    response_model=ResponseModel,
 )
 async def verify_signature(
     document: Annotated[UploadFile, "Загрузите подписанный документ"],
@@ -42,7 +46,7 @@ async def verify_signature(
         signed_message=detached_signature_content, hash=hash
     )
 
-    return {"result": result["valid"]}
+    return result
 
 
 @router.get(

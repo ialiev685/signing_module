@@ -7,7 +7,7 @@ def get_oids_from_certificate(certificate: Certificate):
     try:
 
         ekus_object = certificate.ExtendedKeyUsage().EKUs
-        oids = get_data_after_processing_item(ekus_object)
+        oids = get_data_after_processing_item(object_data=ekus_object)
         oid_value_array = [oid.OID for oid in oids]
 
         return oid_value_array
