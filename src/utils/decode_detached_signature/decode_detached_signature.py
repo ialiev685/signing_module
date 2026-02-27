@@ -69,7 +69,10 @@ class DecodeDetachedSignature:
                         )
                     )
             except KeyError as error:
-                print("Ошибка при обращении к методу 'certificates_chain': ", error)
+                print(
+                    "Ошибка при вызове метода 'DecodeDetachedSignature.certificates_chain': ",
+                    error,
+                )
 
         return certificates_chain_list
 
@@ -95,7 +98,9 @@ class DecodeDetachedSignature:
                     )
 
             except KeyError as error:
-                print("Ошибка при обращении к методу 'issuer': ", error)
+                print(
+                    "Ошибка при вызове метода 'DecodeDetachedSignature.issuer': ", error
+                )
 
         return issuer_list
 
@@ -118,6 +123,9 @@ class DecodeDetachedSignature:
                     value = format_asn1_time(value_decoded)
 
             except KeyError as error:
-                print("Ошибка при обращении к методу 'signing_time': ", error)
+                print(
+                    "Ошибка при вызове метода 'DecodeDetachedSignature.signing_time': ",
+                    error,
+                )
 
         return value

@@ -18,7 +18,9 @@ class DecodeCertificateAttributes:
             self.certificate = certificate
 
         except KeyError as error:
-            print("Ошибка при получении общих данных сертификата: ", error)
+            print(
+                "Ошибка при получении общих данных сертификата (декодирование): ", error
+            )
 
     @property
     def certificate_info(self) -> ResponseDataModel:
@@ -31,7 +33,10 @@ class DecodeCertificateAttributes:
                     rdn_attributes=issuer_rdn_attributes
                 )
         except KeyError as error:
-            print("Ошибка при получении значений атрибутов сертификата: ", error)
+            print(
+                "Ошибка при вызове метода DecodeCertificateAttributes.certificate_info: ",
+                error,
+            )
             return ResponseDataModel(is_success=False, data=values)
 
         return ResponseDataModel(is_success=True, data=values)
