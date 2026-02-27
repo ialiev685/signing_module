@@ -1,4 +1,4 @@
-from typing import Callable, Type, Generic, TypeVar
+from typing import Callable, Type, Generic, TypeVar, TypedDict
 
 T = TypeVar("T")
 
@@ -28,7 +28,7 @@ class ExtendedKeyUsage(Generic[T]):
 class Certificate:
     SubjectName: str
     IssuerName: str
-    Thumbprint: str
+    Thumbprint: str | None
     ValidFromDate: str
     ValidToDate: str
     SerialNumber: str
@@ -37,7 +37,7 @@ class Certificate:
 
 class Signers:
     Certificate: Certificate
-    SignatureTimeStampTime: str
+    SignatureTimeStampTime: str | None
     SigningTime: str
 
 

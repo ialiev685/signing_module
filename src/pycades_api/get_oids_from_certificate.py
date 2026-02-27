@@ -1,4 +1,4 @@
-from pycades_api import get_data_after_processing_item
+from .get_data_after_processing_item import get_data_after_processing_item
 from pycades_types import Certificate
 
 

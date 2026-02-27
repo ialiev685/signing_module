@@ -1,3 +1,4 @@
+from dict_types import SigningStructureDict
 from pycades_api.signed_data_processor import SignedDataProcessor
 from pycades_engine import pycades_engine
 from typing import TypedDict
@@ -5,6 +6,7 @@ from typing import TypedDict
 
 class ReturnVerifySignatureByHash(TypedDict):
     valid: bool
+    data: SigningStructureDict | None
 
 
 def verify_signature_by_hash(
@@ -45,83 +47,11 @@ def verify_signature_by_hash(
 
     try:
         signedData.VerifyHash(hashed_data, signed_message, signingTypeCode)
-        signedDataProcessor = SignedDataProcessor(signedData)
 
-        return {"valid": True}
+        return {
+            "valid": True,
+            "data": SignedDataProcessor(signedData).signing_structure,
+        }
     except Exception as error:
-        print("error", error)
-        return {"valid": False}
-
-
-# Certificates
-[
-    "Count",
-    "Find",
-    "Item",
-    "__class__",
-    "__delattr__",
-    "__dir__",
-    "__doc__",
-    "__eq__",
-    "__format__",
-    "__ge__",
-    "__getattribute__",
-    "__gt__",
-    "__hash__",
-    "__init__",
-    "__init_subclass__",
-    "__le__",
-    "__lt__",
-    "__ne__",
-    "__new__",
-    "__reduce__",
-    "__reduce_ex__",
-    "__repr__",
-    "__setattr__",
-    "__sizeof__",
-    "__str__",
-    "__subclasshook__",
-]
-# signedData
-[
-    "AdditionalStore",
-    "Certificates",
-    "CoSign",
-    "CoSignCades",
-    "CoSignHash",
-    "Content",
-    "ContentEncoding",
-    "EnhanceCades",
-    "GetMsgType",
-    "IsMsgType",
-    "Sign",
-    "SignCades",
-    "SignHash",
-    "Signers",
-    "Verify",
-    "VerifyCades",
-    "VerifyHash",
-    "__class__",
-    "__delattr__",
-    "__dir__",
-    "__doc__",
-    "__eq__",
-    "__format__",
-    "__ge__",
-    "__getattribute__",
-    "__gt__",
-    "__hash__",
-    "__init__",
-    "__init_subclass__",
-    "__le__",
-    "__lt__",
-    "__ne__",
-    "__new__",
-    "__reduce__",
-    "__reduce_ex__",
-    "__repr__",
-    "__setattr__",
-    "__sizeof__",
-    "__str__",
-    "__subclasshook__",
-]
+        print("Ошибка при вызове метода verify_signature_by_hash", error)
+        return {"valid": False, "data": None}
