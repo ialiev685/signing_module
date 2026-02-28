@@ -1,5 +1,6 @@
 from models_types import CertificateInfoModel, SignersModel, SigningStructureModel
-from .safe_get_pycades_attr import safe_get_com_attr
+from utils import safe_get_attr
+
 from .get_data_after_processing_item import get_data_after_processing_item
 from .get_oids_from_certificate import get_oids_from_certificate
 from pycades_types import SignedData, Certificate
@@ -37,7 +38,7 @@ class SignedDataProcessor:
                     issuer_name=certificate.Certificate.IssuerName,
                     valid_from_date=certificate.Certificate.ValidFromDate,
                     valid_to_date=certificate.Certificate.ValidToDate,
-                    signature_timestamp_time=safe_get_com_attr(
+                    signature_timestamp_time=safe_get_attr(
                         object=certificate, attr_name="SignatureTimeStampTime"
                     ),
                     signing_time=certificate.SigningTime,

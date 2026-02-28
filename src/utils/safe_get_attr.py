@@ -1,4 +1,4 @@
-def safe_get_com_attr(object, attr_name, default=None):
+def safe_get_attr(object, attr_name, default=None):
     """
     Безопасно получает атрибут COM-объекта
     """
