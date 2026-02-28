@@ -1,11 +1,11 @@
-def safe_get_attr(object, attr_name, default=None):
+def safe_get_attr(object, attr_name):
     """
     Безопасно получает атрибут COM-объекта
     """
-    if object is None:
-        return default
-
     try:
+        if object is None:
+            return None
+
         return getattr(object, attr_name)
     except Exception:
-        return default
+        return None

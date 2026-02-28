@@ -29,7 +29,6 @@ class SignedDataProcessor:
             processed_data = get_data_after_processing_item(
                 object_data=self._signed_data.Signers
             )
-
             return [
                 SignersModel(
                     subject_name=certificate.Certificate.SubjectName,
@@ -38,9 +37,6 @@ class SignedDataProcessor:
                     issuer_name=certificate.Certificate.IssuerName,
                     valid_from_date=certificate.Certificate.ValidFromDate,
                     valid_to_date=certificate.Certificate.ValidToDate,
-                    signature_timestamp_time=safe_get_attr(
-                        object=certificate, attr_name="SignatureTimeStampTime"
-                    ),
                     signing_time=certificate.SigningTime,
                 )
                 for certificate in processed_data
@@ -54,20 +50,18 @@ class SignedDataProcessor:
         try:
             certificates_chain = self._get_certificates_chain()
             if certificates_chain:
-                result = []
-                for certificate in certificates_chain:
-                    result.append(
-                        CertificateInfoModel(
-                            subject_name=certificate.SubjectName,
-                            serial_number=certificate.SerialNumber,
-                            thumbprint=certificate.Thumbprint,
-                            issuer_name=certificate.IssuerName,
-                            valid_from_date=certificate.ValidFromDate,
-                            valid_to_date=certificate.ValidToDate,
-                            oids=get_oids_from_certificate(certificate),
-                        )
+                return [
+                    CertificateInfoModel(
+                        subject_name=certificate.SubjectName,
+                        serial_number=certificate.SerialNumber,
+                        thumbprint=certificate.Thumbprint,
+                        issuer_name=certificate.IssuerName,
+                        valid_from_date=certificate.ValidFromDate,
+                        valid_to_date=certificate.ValidToDate,
+                        oids=get_oids_from_certificate(certificate),
                     )
-                return result
+                    for certificate in certificates_chain
+                ]
             return None
         except Exception as error:
             print(
@@ -78,12 +72,6 @@ class SignedDataProcessor:
 
     @property
     def signing_structure(self) -> SigningStructureModel:
-
-        signature_timestamp_time = (
-            self.issuer[0].signature_timestamp_time
-            if self.issuer and len(self.issuer) > 0
-            else None
-        )
         signing_time = (
             self.issuer[0].signing_time
             if self.issuer and len(self.issuer) > 0
@@ -93,6 +81,5 @@ class SignedDataProcessor:
         return SigningStructureModel(
             certificates_chain=self.certificates_chain_with_oids,
             issuer=self.issuer,
-            signature_timestamp_time=signature_timestamp_time,
             signing_time=signing_time,
         )

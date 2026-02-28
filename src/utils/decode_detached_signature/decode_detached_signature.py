@@ -7,12 +7,25 @@ from utils.decode_detached_signature.decode_certificate_attributes import (
     DecodeCertificateAttributes,
 )  #
 from pycades_api.constants import OID_SIGNED_DATA, SIGNING_TIME_OID
-from models_types import CertificatesChainsModel, IssuerModel
+from models_types import (
+    AttributeValueModel,
+    CertificateInfoModel,
+    SignersModel,
+    SigningStructureModel,
+)
 from .convert_integer_to_hex import convert_integer_to_hex
 from .format_asn1_time import format_asn1_time
 
-# path_signature = "src/test_signature/test_detached_signature.sig"
-path_signature = "src/test_signature/test1_pdf.p7s"
+path_signature = "src/test_signature/test_detached_signature.sig"
+# path_signature = "src/test_signature/test1_pdf.p7s"
+
+
+def format_str_name_from_attribute_value(
+    attributes: list[AttributeValueModel] | None,
+) -> str:
+    if attributes is None:
+        return ""
+    return ", ".join([f"{attr.name_code}={attr.value}" for attr in attributes])
 
 
 class DecodeDetachedSignature:
@@ -38,8 +51,8 @@ class DecodeDetachedSignature:
                 print("Ошибка при декодировании подписи (signed_data): ", error)
 
     @property
-    def certificates_chain(self) -> list[CertificatesChainsModel]:
-        certificates_chain_list: list[CertificatesChainsModel] = []
+    def certificates_chain(self) -> list[CertificateInfoModel]:
+        certificates_chain_list: list[CertificateInfoModel] = []
 
         if self.signed_data:
             try:
@@ -60,10 +73,14 @@ class DecodeDetachedSignature:
                     valid_to_date = format_asn1_time(date["notAfter"]["utcTime"])
 
                     certificates_chain_list.append(
-                        CertificatesChainsModel(
-                            issuer=issuer_certificate.certificate_info,
-                            subject=subject_certificate.certificate_info,
+                        CertificateInfoModel(
+                            subject_name=format_str_name_from_attribute_value(
+                                subject_certificate.certificate_info.data
+                            ),
                             serial_number=serial_number,
+                            issuer_name=format_str_name_from_attribute_value(
+                                issuer_certificate.certificate_info.data
+                            ),
                             valid_from_date=valid_from_date,
                             valid_to_date=valid_to_date,
                         )
@@ -77,8 +94,8 @@ class DecodeDetachedSignature:
         return certificates_chain_list
 
     @property
-    def issuer(self) -> list[IssuerModel]:
-        issuer_list: list[IssuerModel] = []
+    def issuer(self) -> list[SignersModel]:
+        issuer_list: list[SignersModel] = []
         if self.signed_data:
             try:
                 signer_infos = self.signed_data["signerInfos"]
@@ -91,8 +108,10 @@ class DecodeDetachedSignature:
                         certificate=signer["sid"]["issuerAndSerialNumber"]["issuer"]
                     )
                     issuer_list.append(
-                        IssuerModel(
-                            issuer=issuer_certificate.certificate_info,
+                        SignersModel(
+                            issuer_name=format_str_name_from_attribute_value(
+                                issuer_certificate.certificate_info.data
+                            ),
                             serial_number=serial_number,
                         )
                     )
@@ -129,3 +148,12 @@ class DecodeDetachedSignature:
                 )
 
         return value
+
+    @property
+    def signing_structure(self) -> SigningStructureModel:
+
+        return SigningStructureModel(
+            certificates_chain=self.certificates_chain,
+            issuer=self.issuer,
+            signing_time=self.signing_time,
+        )

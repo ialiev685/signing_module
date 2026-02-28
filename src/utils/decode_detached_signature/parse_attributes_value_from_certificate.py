@@ -5,7 +5,7 @@ from pyasn1.codec.der import decoder
 from pyasn1_modules import rfc5280  # type: ignore
 
 from pycades_api.constants import SUBJECT_OIDS
-from models_types import AttributeValueModel, ResponseDataModel
+from models_types import AttributeValueModel
 
 
 def parse_attributes_value_from_certificate(

@@ -14,26 +14,18 @@ class ResponseDataModel(BaseModel):
     data: list[AttributeValueModel] | None
 
 
-class CertificatesChainsModel(BaseModel):
-    subject: ResponseDataModel
-    issuer: ResponseDataModel
-    valid_from_date: str
-    valid_to_date: str
-    serial_number: str | None
-
-
 class IssuerModel(BaseModel):
     issuer: ResponseDataModel
     serial_number: str | None
 
 
 class CertificateInfoModel(BaseModel):
-    subject_name: str
+    subject_name: Optional[str] = None
     issuer_name: str
     thumbprint: Optional[str] = None
-    valid_from_date: str
-    valid_to_date: str
-    serial_number: str
+    valid_from_date: Optional[str] = None
+    valid_to_date: Optional[str] = None
+    serial_number: Optional[str] = None
     oids: Optional[List[str]] = None
 
 

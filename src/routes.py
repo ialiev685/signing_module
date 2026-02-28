@@ -8,7 +8,6 @@ from utils.decode_detached_signature.decode_detached_signature import (
 )
 from utils.convert_file_to_base64 import convert_file_to_base64
 from pycades_api import create_hash_by_base64, verify_signature_by_hash
-from route_models import DecodedSignature
 
 
 router = APIRouter(prefix="/api/v1")
@@ -52,14 +51,10 @@ async def verify_signature(
 @router.get(
     "/decoded_signature",
     summary="Данные открепленной подписи (временный)",
-    response_model=DecodedSignature,
+    response_model=ResponseModel,
     status_code=status.HTTP_200_OK,
 )
 async def decoded_signature():
     decodedDetachedSignature = DecodeDetachedSignature()
 
-    return {
-        "certificate_chain": decodedDetachedSignature.certificates_chain,
-        "issuer": decodedDetachedSignature.issuer,
-        "signing_time": decodedDetachedSignature.signing_time,
-    }
+    return {"is_valid": False, "data": decodedDetachedSignature}
