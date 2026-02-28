@@ -16,7 +16,7 @@ from models_types import (
 from .convert_integer_to_hex import convert_integer_to_hex
 from .format_asn1_time import format_asn1_time
 
-path_signature = "src/test_signature/test_detached_signature.sig"
+path_signature = "test_signature/test_detached_signature.sig"
 # path_signature = "src/test_signature/test1_pdf.p7s"
 
 

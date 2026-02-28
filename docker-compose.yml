@@ -2,16 +2,18 @@
 
 services:
   signing_app:
-    build: .
+    build:
+      context: ./verification_module_via_pycades
+      dockerfile: Dockerfile
     container_name: signing_app
     volumes:
-      # Монтируем текущую директорию - ключ для разработки!
-      - ./src:/app/src
+      - ./verification_module_via_pycades:/app # Монтируем текущую директорию 
+      - /app/lib/pycades # создает отдельный volume для /app/lib/pycades
     ports:
       - "8004:8000"
     environment:
       - PYTHONPATH=/app/lib/pycades
     # для dev режима
-    command: fastapi dev src/main.py --host 0.0.0.0 --port 8000 --reload
+    command: fastapi dev main.py --host 0.0.0.0 --port 8000 --reload
 
 

@@ -24,7 +24,6 @@ RUN unzip pycades-main.zip && \
     make -j4
 
 RUN mkdir -p /app/lib/pycades/
-RUN mkdir -p /app/src/
 RUN mkdir -p /app/trusted_certificates/
 
 RUN cp -r /tmp/cryptopro/pycades-main/build/* /app/lib/pycades
@@ -34,7 +33,7 @@ RUN rm -rf /tmp/*
 WORKDIR /app
 
 COPY trusted_certificates ./trusted_certificates
-COPY src/ ./src/
+COPY . .
 COPY requirements.txt .
 
 # Доверенные промежуточные сертификаты
@@ -49,7 +48,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 ENV PYTHONPATH="/app/lib/pycades"
 
 # для dev режима
-# CMD ["fastapi", "run", "src/main.py"]
+# CMD ["fastapi", "run", "main.py"]
 
 # для prod режима
-CMD ["fastapi", "dev", "src/main.py", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["fastapi", "dev", "main.py", "--host", "0.0.0.0", "--port", "8000"]
