@@ -1,3 +1,5 @@
+import base64
+
 from pyasn1.codec.ber import decoder
 
 # Cryptographic Message Syntax (CMS)
@@ -34,9 +36,12 @@ class DecodeDetachedSignature:
     def __init__(self):
 
         with open(path_signature, "rb") as file:
+            content = file.read()
+            file_base64 = base64.b64encode(content).decode("utf-8")
+
             try:
                 decoded_value, _ = decoder.decode(
-                    file.read(), asn1Spec=rfc5652.ContentInfo()
+                    content, asn1Spec=rfc5652.ContentInfo()
                 )
                 if (
                     isinstance(decoded_value, rfc5652.ContentInfo)
@@ -107,10 +112,31 @@ class DecodeDetachedSignature:
                     issuer_certificate = DecodeCertificateAttributes(
                         certificate=signer["sid"]["issuerAndSerialNumber"]["issuer"]
                     )
+
+                    signing_time_value_encoded = next(
+                        (
+                            attr["attrValues"]
+                            for attr in signer["signedAttrs"]
+                            if str(attr["attrType"]) == SIGNING_TIME_OID
+                        ),
+                        None,
+                    )
+
+                    signing_time_decoded = (
+                        decoder.decode(signing_time_value_encoded[0])[0]
+                        if signing_time_value_encoded and signing_time_value_encoded[0]
+                        else None
+                    )
+
                     issuer_list.append(
                         SignersModel(
                             issuer_name=format_str_name_from_attribute_value(
                                 issuer_certificate.certificate_info.data
+                            ),
+                            signing_time=(
+                                format_asn1_time(signing_time_decoded)
+                                if signing_time_decoded
+                                else None
                             ),
                             serial_number=serial_number,
                         )
