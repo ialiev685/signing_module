@@ -55,6 +55,5 @@ async def verify_signature(
     status_code=status.HTTP_200_OK,
 )
 async def decoded_signature():
-    decodedDetachedSignature = DecodeDetachedSignature()
 
-    return {"is_valid": False, "data": decodedDetachedSignature}
+    return {"is_valid": False, "data": DecodeDetachedSignature().signing_structure}
