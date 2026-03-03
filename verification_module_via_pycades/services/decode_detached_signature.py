@@ -1,61 +1,47 @@
-import base64
 import requests
 from pyasn1.codec.ber import decoder
 
 # Cryptographic Message Syntax (CMS)
 from pyasn1_modules import rfc5652, rfc2315, rfc5280  # type: ignore
-from pydantic import ValidationError
-from utils.decode_detached_signature.decode_certificate_attributes import (
-    DecodeCertificateAttributes,
-)  #
-from pycades_api.constants import OID_SIGNED_DATA, SIGNING_TIME_OID
+from pycades_api.constants import SIGNING_TIME_OID
 from models_types import (
-    AttributeValueModel,
     CertificateInfoModel,
     SignersModel,
     SigningStructureModel,
 )
-from .convert_integer_to_hex import convert_integer_to_hex
-from .format_asn1_time import format_asn1_time
-
-path_signature = "test_signature/test_detached_signature.sig"
-# path_signature = "src/test_signature/test1_pdf.p7s"
-
-
-def format_str_name_from_attribute_value(
-    attributes: list[AttributeValueModel] | None,
-) -> str:
-    if attributes is None:
-        return ""
-    return ", ".join([f"{attr.name_code}={attr.value}" for attr in attributes])
+from services.decode_certificate_attributes import DecodeCertificateAttributes
+from utils.convert_integer_to_hex import convert_integer_to_hex
+from utils.format_asn1_time import format_asn1_time
+from utils.format_str_name_from_attribute_value import (
+    format_str_name_from_attribute_value,
+)
 
 
 class DecodeDetachedSignature:
     signed_data: rfc5652.SignedData = None
     signature_base64: str
 
-    def __init__(self):
+    def __init__(self, signature_bytes: bytes, signature_base64: str):
+        self.signature_base64 = signature_base64
 
-        with open(path_signature, "rb") as file:
-            content = file.read()
-            file_base64 = base64.b64encode(content).decode("utf-8")
-            self.signature_base64 = file_base64
-
-            try:
-                decoded_value, _ = decoder.decode(
-                    content, asn1Spec=rfc5652.ContentInfo()
+        try:
+            decoded_value, _ = decoder.decode(
+                signature_bytes, asn1Spec=rfc5652.ContentInfo()
+            )
+            if (
+                isinstance(decoded_value, rfc5652.ContentInfo)
+                and decoded_value["contentType"] == rfc5652.id_signedData
+            ):
+                signed_data, _ = decoder.decode(
+                    decoded_value["content"], rfc5652.SignedData()
                 )
-                if (
-                    isinstance(decoded_value, rfc5652.ContentInfo)
-                    and decoded_value["contentType"] == rfc5652.id_signedData
-                ):
-                    signed_data, _ = decoder.decode(
-                        decoded_value["content"], rfc5652.SignedData()
-                    )
-                    self.signed_data = signed_data
+                self.signed_data = signed_data
 
-            except Exception as error:
-                print("Ошибка при декодировании подписи (signed_data): ", error)
+        except Exception as error:
+            print(
+                "Ошибка при декодировании невалидной подписи через библиотеку pyasn1: ",
+                error,
+            )
 
     @property
     def certificates_chain(self) -> list[CertificateInfoModel]:

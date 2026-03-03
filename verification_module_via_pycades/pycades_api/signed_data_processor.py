@@ -1,6 +1,4 @@
 from models_types import CertificateInfoModel, SignersModel, SigningStructureModel
-from utils import safe_get_attr
-
 from .get_data_after_processing_item import get_data_after_processing_item
 from .get_oids_from_certificate import get_oids_from_certificate
 from pycades_types import SignedData, Certificate

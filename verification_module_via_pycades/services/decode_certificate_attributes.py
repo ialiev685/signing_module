@@ -5,8 +5,7 @@ from pyasn1_modules import rfc5652  # type: ignore
 from pyasn1_modules import rfc5280
 
 from models_types import ResponseDataModel
-
-from .parse_attributes_value_from_certificate import (
+from utils.parse_attributes_value_from_certificate import (
     parse_attributes_value_from_certificate,
 )
 

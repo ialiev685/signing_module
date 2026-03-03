@@ -2,8 +2,12 @@ from pycades_api.signed_data_processor import SignedDataProcessor
 from pycades_engine import pycades_engine
 from models_types import ResponseModel
 
+from services.decode_detached_signature import DecodeDetachedSignature
 
-def verify_signature_by_hash(signed_message: str, hash: str) -> ResponseModel:
+
+def verify_signature_by_hash(
+    signed_message_base64: str, hash: str, signed_message_bytes: bytes
+) -> ResponseModel:
     """
     Docstring для verify_signature_by_hash
 
@@ -35,15 +39,21 @@ def verify_signature_by_hash(signed_message: str, hash: str) -> ResponseModel:
 
     signedData = pycades_engine.SignedData()
 
-    signingTypeCode = signedData.GetMsgType(signed_message)
+    signingTypeCode = signedData.GetMsgType(signed_message_base64)
 
     try:
-        signedData.VerifyHash(hashed_data, signed_message, signingTypeCode)
+        signedData.VerifyHash(hashed_data, signed_message_base64, signingTypeCode)
 
         return ResponseModel(
             is_valid=True,
             data=SignedDataProcessor(signed_data=signedData).signing_structure,
         )
     except Exception as error:
-        print("Ошибка при вызове метода verify_signature_by_hash", error)
-        return ResponseModel(is_valid=False, data=None)
+        print("Подпись невалидна", error)
+        return ResponseModel(
+            is_valid=False,
+            data=DecodeDetachedSignature(
+                signature_base64=signed_message_base64,
+                signature_bytes=signed_message_bytes,
+            ).signing_structure,
+        )
