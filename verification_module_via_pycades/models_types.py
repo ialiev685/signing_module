@@ -1,4 +1,5 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, AliasGenerator
+from pydantic.alias_generators import to_snake, to_camel
 from typing import Optional, List
 
 
@@ -14,12 +15,16 @@ class ResponseDataModel(BaseModel):
     data: list[AttributeValueModel] | None
 
 
-class IssuerModel(BaseModel):
-    issuer: ResponseDataModel
-    serial_number: str | None
+class BaseAliasModel(BaseModel):
+    model_config = ConfigDict(
+        populate_by_name=True,
+        alias_generator=AliasGenerator(
+            validation_alias=to_camel, serialization_alias=to_snake
+        ),
+    )
 
 
-class CertificateInfoModel(BaseModel):
+class CertificateInfoModel(BaseAliasModel):
     subject_name: Optional[str] = None
     issuer_name: str
     thumbprint: Optional[str] = None
@@ -34,13 +39,13 @@ class SignersModel(CertificateInfoModel):
     signing_time: Optional[str] = None
 
 
-class SigningStructureModel(BaseModel):
+class SigningStructureModel(BaseAliasModel):
     certificates_chain: Optional[List[CertificateInfoModel]] = None
     issuer: Optional[List[SignersModel]] = None
     signature_timestamp_time: Optional[str] = None
     signing_time: Optional[str] = None
 
 
-class ResponseModel(BaseModel):
+class ResponseModel(BaseAliasModel):
     is_valid: bool
     data: Optional[SigningStructureModel] = None

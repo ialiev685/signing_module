@@ -1,10 +1,10 @@
 import base64
-
+import requests
 from pyasn1.codec.ber import decoder
 
 # Cryptographic Message Syntax (CMS)
 from pyasn1_modules import rfc5652, rfc2315, rfc5280  # type: ignore
-
+from pydantic import ValidationError
 from utils.decode_detached_signature.decode_certificate_attributes import (
     DecodeCertificateAttributes,
 )  #
@@ -32,12 +32,14 @@ def format_str_name_from_attribute_value(
 
 class DecodeDetachedSignature:
     signed_data: rfc5652.SignedData = None
+    signature_base64: str
 
     def __init__(self):
 
         with open(path_signature, "rb") as file:
             content = file.read()
             file_base64 = base64.b64encode(content).decode("utf-8")
+            self.signature_base64 = file_base64
 
             try:
                 decoded_value, _ = decoder.decode(
@@ -177,6 +179,25 @@ class DecodeDetachedSignature:
 
     @property
     def signing_structure(self) -> SigningStructureModel:
+        if not self.signed_data:
+            try:
+                response = requests.post(
+                    url="http://decoding-service:8005/api/decode_detached_signature",
+                    json={"signature": self.signature_base64},
+                    headers={"Content-Type": "application/json"},
+                )
+                data = response.json()["data"]
+                return SigningStructureModel(**data)
+
+            except Exception as error:
+                print(
+                    "Ошибка при вызове метода 'DecodeDetachedSignature.signing_structure': ",
+                    error,
+                )
+
+                return SigningStructureModel(
+                    certificates_chain=[], issuer=[], signing_time=None
+                )
 
         return SigningStructureModel(
             certificates_chain=self.certificates_chain,
