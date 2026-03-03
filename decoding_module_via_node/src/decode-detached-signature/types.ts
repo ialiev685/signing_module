@@ -19,6 +19,5 @@ export type SigningStructure = {
 };
 
 export type ResponseModel = {
-  hasError: boolean;
   data?: SigningStructure | null;
 };

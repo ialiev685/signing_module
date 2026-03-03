@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 8005;
 
 app.use(express.json());
 
-app.get(
+app.post(
   "/api/decode_detached_signature",
   (req: Request, res: Response<ResponseModel>) => {
     const decodedSignature =
@@ -14,12 +14,11 @@ app.get(
         ? new DecodeDetachedSignature(req.body.signature)
         : undefined;
     res.json({
-      hasError: decodedSignature?.signedData ? false : true,
       data: decodedSignature?.signing_structure ?? null,
     });
   },
 );
 
 app.listen(PORT, () => {
-  console.log(`🚀 Сервер запущен на порту ${PORT}`);
+  console.log(`🚀 Микросервис "decoding-service" запущен на порту ${PORT}`);
 });

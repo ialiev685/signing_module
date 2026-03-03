@@ -6,6 +6,7 @@ services:
       context: ./verification_module_via_pycades
       dockerfile: Dockerfile
     container_name: signing_app
+  
     volumes:
       - ./verification_module_via_pycades:/app # Монтируем текущую директорию 
       - /app/lib/pycades # создает отдельный volume для /app/lib/pycades
@@ -16,4 +17,21 @@ services:
     # для dev режима
     command: fastapi dev main.py --host 0.0.0.0 --port 8000 --reload
 
+
+
+  decoding-service:
+    build:
+      context: ./decoding_module_via_node
+      dockerfile: Dockerfile
+    container_name: decoding-module
+    ports:
+      - "8005:8005"  # Пробрасываем порт приложения
+    environment:
+      - PORT=8005
+    volumes:
+      - ./decoding_module_via_node/dist:/app/dist
+      - /app/node_modules  # Исключаем node_modules из монтирования
+    restart: unless-stopped
+    depends_on:
+      - signing_app 
 
