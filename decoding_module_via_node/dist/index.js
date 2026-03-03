@@ -17,5 +17,5 @@ app.post("/api/decode_detached_signature", (req, res) => {
     });
 });
 app.listen(PORT, () => {
-    console.log(`🚀 Микросервис "decoding-service" запущен на порту ${PORT}`);
+    console.log(`🚀 Cервис "decoding-service" запущен на порту ${PORT}`);
 });
