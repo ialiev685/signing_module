@@ -1,4 +1,4 @@
-from typing import Callable, Type, Generic, TypeVar
+from typing import Callable, Generic, TypeVar, Any, Type
 
 T = TypeVar("T")
 
@@ -33,6 +33,7 @@ class Certificate:
     ValidToDate: str
     SerialNumber: str
     ExtendedKeyUsage: Callable[[], ExtendedKeyUsage]
+    Import: Callable[[bytes], None]
 
 
 class Signers:
@@ -41,9 +42,18 @@ class Signers:
     SigningTime: str
 
 
+class StoreCertificates:
+    Find: Callable[[Any, Any], RequestDataByItem[Certificate]]
+    Count: int
+    Item: Callable[[int], Certificate]
+
+
 class Store:
-    Certificates: RequestDataByItem[Certificate]
+
     Open: Callable[[int, str, int], None]
+    Add: Callable[[Certificate], None]
+    Remove: Callable[[Certificate], None]
+    Certificates: StoreCertificates
 
 
 class SignedData:
@@ -54,6 +64,9 @@ class SignedData:
 
 
 class Pycades:
+    # Thumbprint
+    CAPICOM_CERTIFICATE_FIND_SHA1_HASH: int
+    # алгоритм кодировки
     CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_256: int
     CADESCOM_BASE64_TO_BINARY: int
 
@@ -68,6 +81,7 @@ class Pycades:
     # 3 параметр для Open
     CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED: int
 
-    HashedData: Type[HashedData]
-    SignedData: Type[SignedData]
-    Store: Type[Store]
+    HashedData: Callable[[None], HashedData]
+    SignedData: Callable[[None], SignedData]
+    Store: Callable[[None], Store]
+    Certificate: Callable[[None], Certificate]
