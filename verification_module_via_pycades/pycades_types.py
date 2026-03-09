@@ -1,4 +1,4 @@
-from typing import Callable, Generic, TypeVar, Any, Type
+from typing import Callable, Generic, TypeVar, Any, Type, Protocol
 
 T = TypeVar("T")
 
@@ -49,7 +49,6 @@ class StoreCertificates:
 
 
 class Store:
-
     Open: Callable[[int, str, int], None]
     Add: Callable[[Certificate], None]
     Remove: Callable[[Certificate], None]
