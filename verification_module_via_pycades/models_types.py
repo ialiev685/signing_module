@@ -1,6 +1,8 @@
 from pydantic import BaseModel, ConfigDict, AliasGenerator
 from pydantic.alias_generators import to_snake, to_camel
-from typing import Optional, List
+from typing import Optional, List, TypeAlias, Literal, Any, TypeVar, Generic, Union
+
+T = TypeVar("T")
 
 
 class AttributeValueModel(BaseModel):
@@ -49,3 +51,17 @@ class SigningStructureModel(BaseAliasModel):
 class ResponseModel(BaseAliasModel):
     is_valid: bool
     data: Optional[SigningStructureModel] = None
+
+
+class RemoveDataModel(BaseModel):
+    thumbprint: str
+
+
+RequiredCertificateKey: TypeAlias = Literal["subject_name", "issuer_name", "thumbprint"]
+StoreName: TypeAlias = Literal["mRoot", "mCA"]
+
+
+class ResponseDataModel(BaseModel, Generic[T]):
+    has_error: Optional[bool] = False
+    error: Optional[Any] = None
+    data: Optional[T] = None
