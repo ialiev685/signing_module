@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from models_types import ResponseDataModel
 
-app = FastAPI()
+app = FastAPI(title="Модуль подписания", version="1.0.0")
 app.include_router(router)
 
 
