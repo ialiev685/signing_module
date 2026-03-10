@@ -19,10 +19,10 @@ def parse_certmgr_output(output: str) -> list[CertificateInfoModel]:
             key = name.strip()
             value = value.strip()
             if "thumbprint" in key.lower():
-                current_cert["thumbprint"] = value.upper()
-            elif "issuer" in key.lower():
-                current_cert["issuer_name"] = value
-            elif "subject" in key.lower():
                 current_cert["thumbprint"] = value
+            elif "issuer" == key.lower():
+                current_cert["issuer_name"] = value
+            elif "subject" == key.lower():
+                current_cert["subject_name"] = value
 
     return certificates
