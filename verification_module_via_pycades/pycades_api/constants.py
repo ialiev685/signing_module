@@ -107,3 +107,5 @@ SUBJECT_OIDS: Dict[str, SubjectInfo] = {
         "name_code": "ИНН",
     },
 }
+
+# (0x800B010A)

@@ -44,7 +44,8 @@ async def create_hash(
     responses={
         status.HTTP_500_INTERNAL_SERVER_ERROR: {
             "model": ResponseDataModel[VerificationModel]
-        }
+        },
+        status.HTTP_422_UNPROCESSABLE_CONTENT: {"model": ResponseDataModel},
     },
 )
 async def verify_signature(
@@ -88,7 +89,8 @@ class StoreNamePathModel(str, Enum):
     status_code=status.HTTP_200_OK,
     response_model=ResponseDataModel[list[CertificateInfoModel]],
     responses={
-        status.HTTP_500_INTERNAL_SERVER_ERROR: {"model": ResponseDataModel[None]}
+        status.HTTP_500_INTERNAL_SERVER_ERROR: {"model": ResponseDataModel[None]},
+        status.HTTP_422_UNPROCESSABLE_CONTENT: {"model": ResponseDataModel},
     },
 )
 async def get_root_certificates(store_name: StoreNamePathModel):
@@ -114,7 +116,10 @@ class SetCertificatePathModel(BaseModel):
     summary="Загрузить сертифкат",
     status_code=status.HTTP_200_OK,
     response_model=ResponseDataModel[CertificateInfoModel],
-    responses={status.HTTP_400_BAD_REQUEST: {"model": ResponseDataModel[None]}},
+    responses={
+        status.HTTP_400_BAD_REQUEST: {"model": ResponseDataModel[None]},
+        status.HTTP_422_UNPROCESSABLE_CONTENT: {"model": ResponseDataModel},
+    },
 )
 async def set_personal_certificates(
     store_name: StoreNamePathModel,
@@ -158,7 +163,8 @@ class RemoveCertificateBodyModel(BaseModel):
     status_code=status.HTTP_200_OK,
     response_model=ResponseDataModel[CertificateInfoModel],
     responses={
-        status.HTTP_500_INTERNAL_SERVER_ERROR: {"model": ResponseDataModel[None]}
+        status.HTTP_500_INTERNAL_SERVER_ERROR: {"model": ResponseDataModel[None]},
+        status.HTTP_422_UNPROCESSABLE_CONTENT: {"model": ResponseDataModel},
     },
 )
 async def remove_certificate(
