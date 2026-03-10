@@ -2,7 +2,7 @@ from fastapi import UploadFile, APIRouter, status, File
 from pydantic import BaseModel
 from typing import Annotated
 import base64
-from models_types import CertificateInfoModel, ResponseModel, ResponseDataModel
+from models_types import CertificateInfoModel, VerificationModel, ResponseDataModel
 from fastapi.responses import JSONResponse
 from utils.convert_file_to_base64 import convert_file_to_base64
 from pycades_api import (
@@ -40,7 +40,12 @@ async def create_hash(
     "/verify_signature",
     summary="Проверка подписи",
     status_code=status.HTTP_200_OK,
-    response_model=ResponseModel,
+    response_model=ResponseDataModel[VerificationModel],
+    responses={
+        status.HTTP_500_INTERNAL_SERVER_ERROR: {
+            "model": ResponseDataModel[VerificationModel]
+        }
+    },
 )
 async def verify_signature(
     document: Annotated[UploadFile, File(description="Загрузите подписанный документ")],

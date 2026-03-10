@@ -48,9 +48,9 @@ class SigningStructureModel(BaseAliasModel):
     signing_time: Optional[str] = None
 
 
-class ResponseModel(BaseAliasModel):
+class VerificationModel(BaseAliasModel):
     is_valid: bool
-    data: Optional[SigningStructureModel] = None
+    result: Optional[SigningStructureModel] = None
 
 
 class RemoveDataModel(BaseModel):

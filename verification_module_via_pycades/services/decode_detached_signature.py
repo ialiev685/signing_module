@@ -20,6 +20,7 @@ from utils.format_str_name_from_attribute_value import (
 class DecodeDetachedSignature:
     signed_data: rfc5652.SignedData = None
     signature_base64: str
+    error: str
 
     def __init__(self, signature_bytes: bytes, signature_base64: str):
         self.signature_base64 = signature_base64
@@ -68,21 +69,26 @@ class DecodeDetachedSignature:
                     certificates_chain_list.append(
                         CertificateInfoModel(
                             subject_name=format_str_name_from_attribute_value(
-                                subject_certificate.certificate_info.data
+                                subject_certificate.certificate_info
                             ),
                             serial_number=serial_number,
                             issuer_name=format_str_name_from_attribute_value(
-                                issuer_certificate.certificate_info.data
+                                issuer_certificate.certificate_info
                             ),
                             valid_from_date=valid_from_date,
                             valid_to_date=valid_to_date,
                         )
                     )
+                    self.error += (
+                        issuer_certificate.error
+                        + "\n"
+                        + subject_certificate.error
+                        + "\n"
+                    )
             except KeyError as error:
-                print(
-                    "Ошибка при вызове метода 'DecodeDetachedSignature.certificates_chain': ",
-                    error,
-                )
+                error_description = "Ошибка при вызове метода 'DecodeDetachedSignature.certificates_chain': "
+                print(error_description, error)
+                self.error += error_description + str(error) + "\n"
 
         return certificates_chain_list
 
@@ -119,7 +125,7 @@ class DecodeDetachedSignature:
                     issuer_list.append(
                         SignersModel(
                             issuer_name=format_str_name_from_attribute_value(
-                                issuer_certificate.certificate_info.data
+                                issuer_certificate.certificate_info
                             ),
                             signing_time=(
                                 format_asn1_time(signing_time_decoded)
@@ -129,11 +135,13 @@ class DecodeDetachedSignature:
                             serial_number=serial_number,
                         )
                     )
-
+                    self.error += issuer_certificate + "\n"
             except KeyError as error:
-                print(
-                    "Ошибка при вызове метода 'DecodeDetachedSignature.issuer': ", error
+                error_description = (
+                    "Ошибка при вызове метода 'DecodeDetachedSignature.issuer': "
                 )
+                print(error_description, error)
+                self.error += error_description + str(error) + "\n"
 
         return issuer_list
 
@@ -156,10 +164,11 @@ class DecodeDetachedSignature:
                     value = format_asn1_time(value_decoded)
 
             except KeyError as error:
-                print(
-                    "Ошибка при вызове метода 'DecodeDetachedSignature.signing_time': ",
-                    error,
+                error_description = (
+                    "Ошибка при вызове метода 'DecodeDetachedSignature.signing_time': "
                 )
+                print(error_description, error)
+                self.error += error_description + str(error) + "\n"
 
         return value
 
@@ -176,10 +185,9 @@ class DecodeDetachedSignature:
                 return SigningStructureModel(**data)
 
             except Exception as error:
-                print(
-                    "Ошибка при вызове метода 'DecodeDetachedSignature.signing_structure': ",
-                    error,
-                )
+                error_description = "Ошибка при вызове метода 'DecodeDetachedSignature.signing_structure': "
+                print(error_description, error)
+                self.error += error_description + str(error) + "\n"
 
                 return SigningStructureModel(
                     certificates_chain=[], issuer=[], signing_time=None

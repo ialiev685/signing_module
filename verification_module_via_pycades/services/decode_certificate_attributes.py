@@ -4,7 +4,6 @@ from pyasn1_modules import rfc5652  # type: ignore
 # Internet X.509 Public Key Infrastructure Certificate and Certificate
 from pyasn1_modules import rfc5280
 
-from models_types import ResponseDataModel
 from utils.parse_attributes_value_from_certificate import (
     parse_attributes_value_from_certificate,
 )
@@ -12,18 +11,13 @@ from utils.parse_attributes_value_from_certificate import (
 
 class DecodeCertificateAttributes:
     certificate: rfc5280.Name
+    error: str = None
 
     def __init__(self, certificate: rfc5652.CertificateChoices):
-        try:
-            self.certificate = certificate
-
-        except KeyError as error:
-            print(
-                "Ошибка при получении общих данных сертификата (декодирование): ", error
-            )
+        self.certificate = certificate
 
     @property
-    def certificate_info(self) -> ResponseDataModel:
+    def certificate_info(self):
         values = None
         try:
 
@@ -33,10 +27,12 @@ class DecodeCertificateAttributes:
                     rdn_attributes=issuer_rdn_attributes
                 )
         except KeyError as error:
+            error_description = "Ошибка при вызове метода DecodeCertificateAttributes.certificate_info: "
             print(
-                "Ошибка при вызове метода DecodeCertificateAttributes.certificate_info: ",
+                error_description,
                 error,
             )
-            return ResponseDataModel(is_success=False, data=values)
+            self.error = error_description + str(error)
+            return values
 
-        return ResponseDataModel(is_success=True, data=values)
+        return values
