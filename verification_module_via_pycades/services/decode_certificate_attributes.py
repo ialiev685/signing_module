@@ -11,7 +11,7 @@ from utils.parse_attributes_value_from_certificate import (
 
 class DecodeCertificateAttributes:
     certificate: rfc5280.Name
-    error: str = None
+    error: list[str] = []
 
     def __init__(self, certificate: rfc5652.CertificateChoices):
         self.certificate = certificate
@@ -27,12 +27,11 @@ class DecodeCertificateAttributes:
                     rdn_attributes=issuer_rdn_attributes
                 )
         except KeyError as error:
-            error_description = "Ошибка при вызове метода DecodeCertificateAttributes.certificate_info: "
             print(
-                error_description,
+                "Ошибка при вызове метода DecodeCertificateAttributes.certificate_info: ",
                 error,
             )
-            self.error = error_description + str(error)
+            self.error.append(str(error))
             return values
 
         return values

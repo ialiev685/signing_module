@@ -36,15 +36,14 @@ def verify_signature_by_hash(
         )
     except Exception as error:
         print("Подпись невалидна", error)
-        decoded_detached_signature = (
-            DecodeDetachedSignature(
-                signature_base64=signed_message_base64,
-                signature_bytes=signed_message_bytes,
-            ),
+        decoded_detached_signature = DecodeDetachedSignature(
+            signature_base64=signed_message_base64,
+            signature_bytes=signed_message_bytes,
         )
+
         return ResponseDataModel(
             has_error=True,
-            error=str(error) + "\n" + decoded_detached_signature.error,
+            error=str(error) + "\n" + "\n".join(decoded_detached_signature.error),
             data=VerificationModel(
                 is_valid=False,
                 result=decoded_detached_signature.signing_structure,

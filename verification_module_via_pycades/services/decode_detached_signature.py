@@ -20,7 +20,7 @@ from utils.format_str_name_from_attribute_value import (
 class DecodeDetachedSignature:
     signed_data: rfc5652.SignedData = None
     signature_base64: str
-    error: str
+    error: list[str] = []
 
     def __init__(self, signature_bytes: bytes, signature_base64: str):
         self.signature_base64 = signature_base64
@@ -79,16 +79,15 @@ class DecodeDetachedSignature:
                             valid_to_date=valid_to_date,
                         )
                     )
-                    self.error += (
-                        issuer_certificate.error
-                        + "\n"
-                        + subject_certificate.error
-                        + "\n"
-                    )
+                    self.error.extend(issuer_certificate.error)
+                    self.error.extend[subject_certificate.error]
+
             except KeyError as error:
-                error_description = "Ошибка при вызове метода 'DecodeDetachedSignature.certificates_chain': "
-                print(error_description, error)
-                self.error += error_description + str(error) + "\n"
+                print(
+                    "Ошибка при вызове метода 'DecodeDetachedSignature.certificates_chain': ",
+                    error,
+                )
+                self.error.append(str(error))
 
         return certificates_chain_list
 
@@ -135,13 +134,12 @@ class DecodeDetachedSignature:
                             serial_number=serial_number,
                         )
                     )
-                    self.error += issuer_certificate + "\n"
+                    self.error.extend(issuer_certificate.error)
             except KeyError as error:
-                error_description = (
-                    "Ошибка при вызове метода 'DecodeDetachedSignature.issuer': "
+                print(
+                    "Ошибка при вызове метода 'DecodeDetachedSignature.issuer': ", error
                 )
-                print(error_description, error)
-                self.error += error_description + str(error) + "\n"
+                self.error.append(str(error))
 
         return issuer_list
 
@@ -164,11 +162,11 @@ class DecodeDetachedSignature:
                     value = format_asn1_time(value_decoded)
 
             except KeyError as error:
-                error_description = (
-                    "Ошибка при вызове метода 'DecodeDetachedSignature.signing_time': "
+                print(
+                    "Ошибка при вызове метода 'DecodeDetachedSignature.signing_time': ",
+                    error,
                 )
-                print(error_description, error)
-                self.error += error_description + str(error) + "\n"
+                self.error.append(str(error))
 
         return value
 
@@ -185,9 +183,11 @@ class DecodeDetachedSignature:
                 return SigningStructureModel(**data)
 
             except Exception as error:
-                error_description = "Ошибка при вызове метода 'DecodeDetachedSignature.signing_structure': "
-                print(error_description, error)
-                self.error += error_description + str(error) + "\n"
+                print(
+                    "Ошибка при вызове метода 'DecodeDetachedSignature.signing_structure': ",
+                    error,
+                )
+                self.error.append(str(error))
 
                 return SigningStructureModel(
                     certificates_chain=[], issuer=[], signing_time=None
