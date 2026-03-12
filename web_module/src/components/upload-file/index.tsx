@@ -29,7 +29,7 @@ export const UploadFile = ({
   onChange,
   files,
 }: UploadFileProps) => {
-  const { colors } = useMantineTheme();
+  const { colors, shadows } = useMantineTheme();
 
   return files?.length ? (
     files.map((file) => (
@@ -40,6 +40,7 @@ export const UploadFile = ({
       multiple={false}
       accept={accept?.map((expansion) => fileExpansion[expansion])}
       onDrop={onChange}
+      style={{ boxShadow: shadows.xs }}
     >
       <Flex gap={12} align="center" justify="center">
         <IconUpload color={colors.gray[8]} />
