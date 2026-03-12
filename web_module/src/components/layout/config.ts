@@ -1,3 +1,5 @@
+import { routes } from "@/routes";
+
 type NavItem = {
   link: string;
   title: string;
@@ -5,11 +7,11 @@ type NavItem = {
 
 export const navItems: NavItem[] = [
   {
-    link: "verificationSignature",
+    link: routes.verificationSignature,
     title: "Проверка открепленной подписи",
   },
   {
-    link: "rootCertificate",
+    link: routes.rootCertificate,
     title: "Корневые сертификаты",
   },
 ];

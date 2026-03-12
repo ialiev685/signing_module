@@ -4,6 +4,7 @@ import "./app.css";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Verification } from "@pages/verification";
+import { routes } from "@/routes";
 
 const router = createBrowserRouter([
   {
@@ -17,11 +18,11 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        path: "verificationSignature",
+        path: routes.verificationSignature,
         element: <Verification />,
       },
       {
-        path: "rootCertificate",
+        path: routes.rootCertificate,
         element: <></>,
       },
     ],

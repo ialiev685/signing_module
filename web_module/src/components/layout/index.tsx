@@ -1,7 +1,6 @@
 import { AppShell, List, Title, useMantineTheme, Box } from "@mantine/core";
-import { Outlet } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import { navItems } from "./config";
-import { Link } from "react-router-dom";
 
 export const Layout = () => {
   const { colors } = useMantineTheme();
@@ -16,15 +15,17 @@ export const Layout = () => {
         <List spacing="xs" icon={<></>}>
           {navItems.map(({ title, link }) => (
             <List.Item key={title}>
-              <Link
-                style={{
-                  textDecoration: "none",
-                  color: "inherit",
-                }}
+              <NavLink
                 to={link}
+                style={({ isActive }) => ({
+                  textDecoration: "none",
+                  color: isActive ? "#228be6" : "inherit",
+                  fontWeight: isActive ? 600 : 400,
+                  transition: "color 0.2s ease",
+                })}
               >
                 {title}
-              </Link>
+              </NavLink>
             </List.Item>
           ))}
         </List>
