@@ -5,7 +5,10 @@ export const Verification = () => {
   return (
     <Flex gap={24} direction="column">
       <Title order={4}>Проверка открепленной подписи</Title>
-      <UploadFile />
+      <UploadFile
+        title="Загрузите документ"
+        accept={["doc", "jpeg", "pdf", "png", "xls", "xlsx"]}
+      />
     </Flex>
   );
 };
