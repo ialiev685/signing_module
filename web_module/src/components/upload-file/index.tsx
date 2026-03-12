@@ -1,6 +1,8 @@
 import { Dropzone, MIME_TYPES } from "@mantine/dropzone";
 import { Text, Flex } from "@mantine/core";
 import { IconUpload } from "@tabler/icons-react";
+import { useMantineTheme } from "@mantine/core";
+import { FileCard } from "../file-card";
 
 const fileExpansion = {
   p7b: "application/pkcs7-signature",
@@ -17,23 +19,34 @@ const fileExpansion = {
 type UploadFileProps = {
   title?: string;
   accept?: (keyof typeof fileExpansion)[];
+  onChange: (files?: File[]) => void;
+  files?: File[];
 };
 
-export const UploadFile = ({ title, accept }: UploadFileProps) => {
-  return (
+export const UploadFile = ({
+  title,
+  accept,
+  onChange,
+  files,
+}: UploadFileProps) => {
+  const { colors } = useMantineTheme();
+
+  return files?.length ? (
+    files.map((file) => (
+      <FileCard title={file.name} onClose={() => onChange(undefined)} />
+    ))
+  ) : (
     <Dropzone
       multiple={false}
       accept={accept?.map((expansion) => fileExpansion[expansion])}
-      onDrop={(files) => {
-        console.log("files", files);
-      }}
+      onDrop={onChange}
     >
-      <Flex gap={12} align="center">
-        <IconUpload />
+      <Flex gap={12} align="center" justify="center">
+        <IconUpload color={colors.gray[8]} />
         <div>
-          <Text>{title}</Text>
+          <Text c={colors.gray[8]}>{title}</Text>
           {accept && (
-            <Text size="sm" c="dimmed">
+            <Text size="sm" c={colors.gray[6]}>
               {accept?.map((expansion) => expansion).join(", ")}
             </Text>
           )}
