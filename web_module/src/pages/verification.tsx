@@ -4,7 +4,7 @@ import { api } from "@/services/client";
 import { UploadFile } from "@components/upload-file";
 import { Title, Flex, Button, SimpleGrid } from "@mantine/core";
 import { useState } from "react";
-import { getCertificateContentBar } from "./lib";
+import { getCertificateContentBar, getSignatureContentBar } from "./lib";
 
 export const Verification = () => {
   const [documents, setDocuments] = useState<File[] | undefined>(undefined);
@@ -30,10 +30,16 @@ export const Verification = () => {
   };
 
   const content = decodedData ? (
-    <CardInfo
-      title="Информация о сертификате"
-      contentBar={getCertificateContentBar(decodedData)}
-    />
+    <Flex direction="column" gap={24}>
+      <CardInfo
+        title="Информация о подписи"
+        contentBar={getSignatureContentBar(decodedData)}
+      />
+      <CardInfo
+        title="Информация о сертификате"
+        contentBar={getCertificateContentBar(decodedData)}
+      />
+    </Flex>
   ) : (
     <SimpleGrid cols={2}>
       <UploadFile
