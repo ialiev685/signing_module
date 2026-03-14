@@ -49,7 +49,7 @@ export const getCertificateContentBar = (
       },
       {
         key: "Срок действия",
-        value: `${signatoryCertificate?.valid_from_date} - ${issuer?.valid_to_date}`,
+        value: `${signatoryCertificate?.valid_from_date} - ${signatoryCertificate?.valid_to_date}`,
       },
     ];
   }
