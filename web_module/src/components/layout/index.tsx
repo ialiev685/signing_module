@@ -31,7 +31,7 @@ export const Layout = () => {
         </List>
       </AppShell.Navbar>
 
-      <AppShell.Main pl={330} bg={colors.gray[0]}>
+      <AppShell.Main pl={330} bg={colors.gray[1]}>
         <Box p={24} w={600}>
           <Outlet />
         </Box>
