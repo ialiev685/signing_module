@@ -80,7 +80,7 @@ class DecodeDetachedSignature:
                         )
                     )
                     self.error.extend(issuer_certificate.error)
-                    self.error.extend[subject_certificate.error]
+                    self.error.extend(subject_certificate.error)
 
             except KeyError as error:
                 print(

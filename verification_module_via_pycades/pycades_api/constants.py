@@ -108,4 +108,4 @@ SUBJECT_OIDS: Dict[str, SubjectInfo] = {
     },
 }
 
-# (0x800B010A)
+# (0x800B010A) - о невалидности
