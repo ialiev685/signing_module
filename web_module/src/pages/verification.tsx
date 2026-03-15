@@ -2,11 +2,18 @@ import { CardInfo } from "@/components/card-info";
 import type { ResponseDataModelVerificationModel } from "@/services/Api";
 import { api } from "@/services/client";
 import { UploadFile } from "@components/upload-file";
-import { Title, Flex, Button, SimpleGrid } from "@mantine/core";
+import {
+  Title,
+  Flex,
+  Button,
+  SimpleGrid,
+  useMantineTheme,
+} from "@mantine/core";
 import { useState } from "react";
 import { getCertificateContentBar, getSignatureContentBar } from "./lib";
 
 export const Verification = () => {
+  const { colors } = useMantineTheme();
   const [documents, setDocuments] = useState<File[] | undefined>(undefined);
   const [signatures, setSignatures] = useState<File[] | undefined>(undefined);
   const [decodedData, setDecodedData] =
@@ -27,6 +34,12 @@ export const Verification = () => {
         setError(error);
       }
     }
+  };
+
+  const handleClear = async () => {
+    setDecodedData(undefined);
+    setDocuments(undefined);
+    setSignatures(undefined);
   };
 
   const content = decodedData ? (
@@ -63,10 +76,10 @@ export const Verification = () => {
       {content}
       <Button
         disabled={!documents || !signatures}
-        color="teal"
-        onClick={handleVerification}
+        color={colors.cyan[5]}
+        onClick={decodedData ? handleClear : handleVerification}
       >
-        Проверить
+        {decodedData ? "Назад" : "Проверить"}
       </Button>
     </Flex>
   );
