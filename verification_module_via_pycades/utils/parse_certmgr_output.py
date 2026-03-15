@@ -8,7 +8,7 @@ def parse_certmgr_output(output: str) -> list[CertificateInfoModel]:
     current_cert: dict[RequiredCertificateKey, str] = {}
 
     for line in lines:
-        if re.match("\d+-{7,}", line):
+        if re.match("\d+-{7,}|={7,}", line):
             if current_cert:
                 certificates.append(CertificateInfoModel(**current_cert))
                 current_cert = {}
