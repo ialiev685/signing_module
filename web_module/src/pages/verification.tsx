@@ -8,6 +8,7 @@ import {
   Button,
   SimpleGrid,
   useMantineTheme,
+  Alert,
 } from "@mantine/core";
 import { useState } from "react";
 import { getCertificateContentBar, getSignatureContentBar } from "./lib";
@@ -29,10 +30,11 @@ export const Verification = () => {
         document: documents[0],
       });
       setDecodedData(data.data);
-    } catch (error: unknown) {
-      if (typeof error === "string") {
-        setError(error);
+      if (data.has_error && typeof data.error === "string") {
+        setError(data.error);
       }
+    } catch (error: unknown) {
+      console.error("error", error);
     }
   };
 
@@ -81,6 +83,16 @@ export const Verification = () => {
       >
         {decodedData ? "Назад" : "Проверить"}
       </Button>
+      {error && (
+        <Alert
+          title="Ошибка"
+          color="red"
+          onClose={() => setError(undefined)}
+          withCloseButton
+        >
+          {error}
+        </Alert>
+      )}
     </Flex>
   );
 };
