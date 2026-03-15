@@ -5,7 +5,6 @@ import { useMantineTheme } from "@mantine/core";
 import { FileCard } from "../file-card";
 
 const fileExpansion = {
-  p7b: "application/pkcs7-signature",
   p7s: "application/pkcs7-signature",
   sig: "application/pgp-signature",
   pdf: MIME_TYPES.pdf,
