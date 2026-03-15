@@ -66,7 +66,7 @@ export const Verification = () => {
       <UploadFile
         files={signatures}
         title="Загрузите подпись"
-        accept={["p7b", "p7s", "sig"]}
+        accept={["p7s", "sig"]}
         onChange={setSignatures}
       />
     </SimpleGrid>
