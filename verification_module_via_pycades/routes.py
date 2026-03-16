@@ -25,15 +25,30 @@ def check_required_files(files: list[UploadFile]):
 @router.post(
     "/create_hash",
     summary="Создание хеша документа",
+    status_code=status.HTTP_200_OK,
+    response_model=ResponseDataModel[str],
+    responses={
+        status.HTTP_500_INTERNAL_SERVER_ERROR: {
+            "model": ResponseDataModel[VerificationModel]
+        },
+        status.HTTP_422_UNPROCESSABLE_CONTENT: {"model": ResponseDataModel},
+    },
 )
 async def create_hash(
     file: Annotated[UploadFile, "Загрузите документ"],
 ):
-    content = await file.read()
-    file_base64 = base64.b64encode(content).decode("utf-8")
-    hash = create_hash_by_base64(file_base64)
-
-    return {"file": hash}
+    try:
+        content = await file.read()
+        file_base64 = base64.b64encode(content).decode("utf-8")
+        hash = create_hash_by_base64(file_base64)
+        return ResponseDataModel(data=hash)
+    except Exception as error:
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={
+                **ResponseDataModel(has_error=True, error=str(error)).model_dump()
+            },
+        )
 
 
 @router.post(
@@ -42,9 +57,7 @@ async def create_hash(
     status_code=status.HTTP_200_OK,
     response_model=ResponseDataModel[VerificationModel],
     responses={
-        status.HTTP_500_INTERNAL_SERVER_ERROR: {
-            "model": ResponseDataModel[VerificationModel]
-        },
+        status.HTTP_500_INTERNAL_SERVER_ERROR: {"model": ResponseDataModel},
         status.HTTP_422_UNPROCESSABLE_CONTENT: {"model": ResponseDataModel},
     },
 )
