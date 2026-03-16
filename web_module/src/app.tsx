@@ -5,8 +5,9 @@ import "./app.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Verification } from "@/pages/verification";
 import { routes } from "@/routes";
-import { RootCertificate } from "@/pages/root-certificate";
+import { RootCertificates } from "@/pages/root-certificates";
 import { Container } from "@mantine/core";
+import { MiddleCertificates } from "@/pages/middle-certificate";
 
 const router = createBrowserRouter([
   {
@@ -24,8 +25,12 @@ const router = createBrowserRouter([
         element: <Verification />,
       },
       {
-        path: routes.rootCertificate,
-        element: <RootCertificate />,
+        path: routes.rootCertificates,
+        element: <RootCertificates />,
+      },
+      {
+        path: routes.trustedCertificates,
+        element: <MiddleCertificates />,
       },
     ],
   },

@@ -11,7 +11,11 @@ export const navItems: NavItem[] = [
     title: "Проверка открепленной подписи",
   },
   {
-    link: routes.rootCertificate,
+    link: routes.rootCertificates,
     title: "Корневые сертификаты",
+  },
+  {
+    link: routes.trustedCertificates,
+    title: "Промежуточные сертификаты",
   },
 ];

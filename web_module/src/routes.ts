@@ -1,4 +1,5 @@
 export const routes = {
   verificationSignature: "verificationSignature",
-  rootCertificate: "rootCertificate",
+  rootCertificates: "rootCertificates",
+  trustedCertificates: "trustedCertificates",
 } as const;
