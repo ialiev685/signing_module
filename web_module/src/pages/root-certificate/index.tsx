@@ -1,23 +1,44 @@
 import {
-  NativeSelect,
-  type ComboboxItem,
   FileButton,
   Flex,
   Title,
   Button,
   useMantineTheme,
+  Text,
+  Group,
 } from "@mantine/core";
 import { api } from "@/services/client";
-import { StoreNamePathModel } from "@/services/Api";
+import { StoreNamePathModel, type CertificateInfoModel } from "@/services/Api";
 import { useEffect, useState } from "react";
-import { convertDataToSelectOptions } from "./lib";
+import { getNameFromSubjectName } from "./lib";
 import { notifications } from "@mantine/notifications";
 import { IconX, IconCheck } from "@tabler/icons-react";
+import { DataTable, type DataTableColumn } from "mantine-datatable";
+
+const columns: DataTableColumn<CertificateInfoModel>[] = [
+  {
+    accessor: "subject",
+    title: "Имя субъкта",
+    render: ({ subject_name }) => (
+      <Text truncate maw={190} size="xs">
+        {getNameFromSubjectName(subject_name)}
+      </Text>
+    ),
+  },
+  {
+    accessor: "thumbprint",
+    title: "Отпечаток",
+    render: ({ thumbprint }) => <Text size="xs">{thumbprint}</Text>,
+  },
+];
 
 export const RootCertificate = () => {
+  const [selectedIndex, setSelectedIndex] = useState<number | undefined>(
+    undefined,
+  );
   const { colors } = useMantineTheme();
 
-  const [data, setData] = useState<ComboboxItem[]>([]);
+  const [data, setData] = useState<CertificateInfoModel[]>([]);
   const getRootCertificate = async () => {
     try {
       const { data } =
@@ -25,7 +46,7 @@ export const RootCertificate = () => {
           StoreNamePathModel.MRoot,
         );
 
-      setData(convertDataToSelectOptions(data.data));
+      setData(data.data ?? []);
     } catch (error: unknown) {
       console.log("error", error);
     }
@@ -68,17 +89,35 @@ export const RootCertificate = () => {
   return (
     <Flex direction="column" gap={24}>
       <Title order={4}>Корневые сертификаты</Title>
-      <NativeSelect data={data} />
-      <FileButton
-        accept="application/x-x509-ca-cert, application/x-pkcs7-certificates"
-        onChange={handleUploadRootCertificate}
-      >
-        {(props) => (
-          <Button {...props} color={colors.cyan[5]}>
-            Добавить
-          </Button>
-        )}
-      </FileButton>
+
+      <DataTable
+        rowBackgroundColor={(_, index) =>
+          selectedIndex === index ? colors.cyan[4] : undefined
+        }
+        withColumnBorders
+        withTableBorder
+        highlightOnHover
+        records={data}
+        onRowClick={({ index }) => {
+          setSelectedIndex(index);
+        }}
+        columns={columns}
+      />
+      <Group justify="space-between" grow>
+        <FileButton
+          accept="application/x-x509-ca-cert, application/x-pkcs7-certificates"
+          onChange={handleUploadRootCertificate}
+        >
+          {(props) => (
+            <Button {...props} color={colors.cyan[5]}>
+              Добавить
+            </Button>
+          )}
+        </FileButton>
+        <Button disabled={!selectedIndex} color="red">
+          Удалить
+        </Button>
+      </Group>
     </Flex>
   );
 };

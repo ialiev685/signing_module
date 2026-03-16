@@ -2,8 +2,9 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "@mantine/core/styles.css";
 import "@mantine/dropzone/styles.css";
-import { MantineProvider } from "@mantine/core";
 import "@mantine/notifications/styles.css";
+import "mantine-datatable/styles.css";
+import { MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 
 import App from "./app.tsx";

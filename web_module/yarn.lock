@@ -2178,6 +2178,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mantine-datatable@npm:^8.3.13":
+  version: 8.3.13
+  resolution: "mantine-datatable@npm:8.3.13"
+  peerDependencies:
+    "@mantine/core": ">=8.3"
+    "@mantine/hooks": ">=8.3"
+    clsx: ">=2"
+    react: ">=19"
+    react-dom: ">=19"
+  checksum: 10c0/47f5338c449d4c2559cebc218fbd363470710e5369a5869f5c82a1260e2e758248ff7f097982734aacba621f614fe42cbbe5f1f2396d650605ca876c49334672
+  languageName: node
+  linkType: hard
+
 "minimatch@npm:^10.2.2":
   version: 10.2.4
   resolution: "minimatch@npm:10.2.4"
@@ -3122,10 +3135,12 @@ __metadata:
     "@types/react": "npm:^19.2.7"
     "@types/react-dom": "npm:^19.2.3"
     "@vitejs/plugin-react-swc": "npm:^4.2.2"
+    clsx: "npm:^2.1.1"
     eslint: "npm:^9.39.1"
     eslint-plugin-react-hooks: "npm:^7.0.1"
     eslint-plugin-react-refresh: "npm:^0.4.24"
     globals: "npm:^16.5.0"
+    mantine-datatable: "npm:^8.3.13"
     react: "npm:^19.2.0"
     react-dom: "npm:^19.2.0"
     react-router-dom: "npm:6.30.3"
