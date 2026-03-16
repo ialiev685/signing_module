@@ -158,7 +158,6 @@ export const RootCertificate = () => {
           Удалить
         </Button>
       </Group>
-      <Dialog opened>123</Dialog>
     </Flex>
   );
 };
