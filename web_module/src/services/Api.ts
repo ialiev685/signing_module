@@ -69,12 +69,6 @@ export interface CertificateInfoModel {
   oids?: string[] | null;
 }
 
-/** HTTPValidationError */
-export interface HTTPValidationError {
-  /** Detail */
-  detail?: ValidationError[];
-}
-
 /** RemoveCertificateBodyModel */
 export interface RemoveCertificateBodyModel {
   /** Thumbprint */
@@ -145,6 +139,19 @@ export interface ResponseDataModelListCertificateInfoModel {
   data?: CertificateInfoModel[] | null;
 }
 
+/** ResponseDataModel[str] */
+export interface ResponseDataModelStr {
+  /**
+   * Has Error
+   * @default false
+   */
+  has_error?: boolean | null;
+  /** Error */
+  error?: null;
+  /** Data */
+  data?: string | null;
+}
+
 /** SignersModel */
 export interface SignersModel {
   /** Subject Name */
@@ -177,16 +184,6 @@ export interface SigningStructureModel {
   signature_timestamp_time?: string | null;
   /** Signing Time */
   signing_time?: string | null;
-}
-
-/** ValidationError */
-export interface ValidationError {
-  /** Location */
-  loc: (string | number)[];
-  /** Message */
-  msg: string;
-  /** Error Type */
-  type: string;
 }
 
 /** VerificationModel */
@@ -470,7 +467,10 @@ export class Api<
       data: BodyCreateHashApiV1CreateHashPost,
       params: RequestParams = {},
     ) =>
-      this.request<any, HTTPValidationError>({
+      this.request<
+        ResponseDataModelStr,
+        ResponseDataModel | ResponseDataModelVerificationModel
+      >({
         path: `/api/v1/create_hash`,
         method: "POST",
         body: data,
@@ -490,10 +490,7 @@ export class Api<
       data: BodyVerifySignatureApiV1VerifySignaturePost,
       params: RequestParams = {},
     ) =>
-      this.request<
-        ResponseDataModelVerificationModel,
-        ResponseDataModel | ResponseDataModelVerificationModel
-      >({
+      this.request<ResponseDataModelVerificationModel, ResponseDataModel>({
         path: `/api/v1/verify_signature`,
         method: "POST",
         body: data,
