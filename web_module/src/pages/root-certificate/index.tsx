@@ -6,6 +6,7 @@ import {
   useMantineTheme,
   Text,
   Group,
+  Dialog,
 } from "@mantine/core";
 import { api } from "@/services/client";
 import { StoreNamePathModel, type CertificateInfoModel } from "@/services/Api";
@@ -14,6 +15,7 @@ import { getNameFromSubjectName } from "./lib";
 import { notifications } from "@mantine/notifications";
 import { IconX, IconCheck } from "@tabler/icons-react";
 import { DataTable, type DataTableColumn } from "mantine-datatable";
+import { modals } from "@mantine/modals";
 
 const columns: DataTableColumn<CertificateInfoModel>[] = [
   {
@@ -33,9 +35,9 @@ const columns: DataTableColumn<CertificateInfoModel>[] = [
 ];
 
 export const RootCertificate = () => {
-  const [selectedIndex, setSelectedIndex] = useState<number | undefined>(
-    undefined,
-  );
+  const [selectedThumbprint, setSelectedThumbprint] = useState<
+    string | undefined
+  >(undefined);
   const { colors } = useMantineTheme();
 
   const [data, setData] = useState<CertificateInfoModel[]>([]);
@@ -86,20 +88,54 @@ export const RootCertificate = () => {
     }
   };
 
+  const handleRemoveRootCertificate = async () => {
+    if (!selectedThumbprint) return;
+    modals.openConfirmModal({
+      title: "Пожалуйста подтвердите удаление",
+      children: "Вы действительно хотите удалить сертификат?",
+      labels: { cancel: "Отмена", confirm: "Удалить" },
+      confirmProps: { color: "red" },
+      centered: true,
+      onConfirm: async () => {
+        try {
+          const { data } =
+            await api.removeCertificateApiV1RemoveCertificatePost({
+              thumbprint: selectedThumbprint,
+              store_name: StoreNamePathModel.MRoot,
+            });
+          if (data.data) {
+            notifications.show({
+              title: "Успешно",
+              message: "Сертификат удален",
+              icon: <IconCheck />,
+              position: "top-center",
+              color: "green",
+            });
+            await getRootCertificate();
+          }
+        } catch (error: unknown) {
+          console.log("error", error);
+        }
+      },
+    });
+  };
+
   return (
     <Flex direction="column" gap={24}>
       <Title order={4}>Корневые сертификаты</Title>
 
       <DataTable
-        rowBackgroundColor={(_, index) =>
-          selectedIndex === index ? colors.cyan[4] : undefined
+        rowBackgroundColor={(record) =>
+          selectedThumbprint === record.thumbprint ? colors.cyan[4] : undefined
         }
         withColumnBorders
         withTableBorder
         highlightOnHover
         records={data}
-        onRowClick={({ index }) => {
-          setSelectedIndex(index);
+        onRowClick={({ record }) => {
+          if (record.thumbprint) {
+            setSelectedThumbprint(record.thumbprint);
+          }
         }}
         columns={columns}
       />
@@ -114,10 +150,15 @@ export const RootCertificate = () => {
             </Button>
           )}
         </FileButton>
-        <Button disabled={!selectedIndex} color="red">
+        <Button
+          disabled={!selectedThumbprint}
+          color="red"
+          onClick={handleRemoveRootCertificate}
+        >
           Удалить
         </Button>
       </Group>
+      <Dialog opened>123</Dialog>
     </Flex>
   );
 };

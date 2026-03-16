@@ -6,14 +6,17 @@ import "@mantine/notifications/styles.css";
 import "mantine-datatable/styles.css";
 import { MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
+import { ModalsProvider } from "@mantine/modals";
 
 import App from "./app.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <MantineProvider>
-      <Notifications />
-      <App />
+      <ModalsProvider>
+        <Notifications />
+        <App />
+      </ModalsProvider>
     </MantineProvider>
   </StrictMode>,
 );

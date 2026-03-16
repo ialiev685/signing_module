@@ -643,6 +643,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mantine/modals@npm:^8.3.17":
+  version: 8.3.17
+  resolution: "@mantine/modals@npm:8.3.17"
+  peerDependencies:
+    "@mantine/core": 8.3.17
+    "@mantine/hooks": 8.3.17
+    react: ^18.x || ^19.x
+    react-dom: ^18.x || ^19.x
+  checksum: 10c0/db2ccf8d9b1569731c9212a318039e4aacb28fd61e86b41cd221de2f7fd45b7ac595a87171743416437f76faa4203fc467561e66c9406ea23aad8b70f22d6e9e
+  languageName: node
+  linkType: hard
+
 "@mantine/notifications@npm:^8.3.17":
   version: 8.3.17
   resolution: "@mantine/notifications@npm:8.3.17"
@@ -3129,6 +3141,7 @@ __metadata:
     "@mantine/core": "npm:^8.3.16"
     "@mantine/dropzone": "npm:^8.3.16"
     "@mantine/hooks": "npm:^8.3.16"
+    "@mantine/modals": "npm:^8.3.17"
     "@mantine/notifications": "npm:^8.3.17"
     "@tabler/icons-react": "npm:^3.40.0"
     "@types/node": "npm:^24.10.1"
