@@ -24,7 +24,7 @@ def remove_certificate_from_store(
         )
         parsed_result = parse_certmgr_output(result.stdout)
         return ResponseDataModel(
-            data=parsed_result[0] if len(parsed_result) > 1 else None
+            data=parsed_result[0] if len(parsed_result) > 0 else None
         )
     except Exception as error:
         print("Ошибка при сохранении данных сертификата в стор через консоль: ", error)
