@@ -6,13 +6,12 @@ import {
   useMantineTheme,
   Text,
   Group,
-  Dialog,
 } from "@mantine/core";
 import { api } from "@/services/client";
 import { StoreNamePathModel, type CertificateInfoModel } from "@/services/Api";
 import { useEffect, useState } from "react";
 import { getNameFromSubjectName } from "./lib";
-import { notifications } from "@mantine/notifications";
+import { notifications, type NotificationData } from "@mantine/notifications";
 import { IconX, IconCheck } from "@tabler/icons-react";
 import { DataTable, type DataTableColumn } from "mantine-datatable";
 import { modals } from "@mantine/modals";
@@ -34,6 +33,20 @@ const columns: DataTableColumn<CertificateInfoModel>[] = [
   },
 ];
 
+const errorNotificationOptions: Partial<NotificationData> = {
+  icon: <IconX />,
+  title: "Ошибка",
+  position: "top-center",
+  color: "red",
+};
+
+const successNotificationOptions: Partial<NotificationData> = {
+  icon: <IconCheck />,
+  title: "Успешно",
+  position: "top-center",
+  color: "green",
+};
+
 export const RootCertificate = () => {
   const [selectedThumbprint, setSelectedThumbprint] = useState<
     string | undefined
@@ -51,6 +64,11 @@ export const RootCertificate = () => {
       setData(data.data ?? []);
     } catch (error: unknown) {
       console.log("error", error);
+      setData([]);
+      notifications.show({
+        ...errorNotificationOptions,
+        message: "Ошибка при получении сертификатов",
+      });
     }
   };
 
@@ -69,21 +87,16 @@ export const RootCertificate = () => {
         );
       if (data.data) {
         notifications.show({
-          title: "Успешно",
+          ...successNotificationOptions,
           message: "Сертификат добавлен",
-          icon: <IconCheck />,
-          position: "top-center",
-          color: "green",
         });
+        await getRootCertificate();
       }
     } catch (error: unknown) {
       console.log("error", error);
       notifications.show({
-        icon: <IconX />,
-        title: "Ошибка",
-        message: "Сертификат не блы добавлен",
-        position: "top-center",
-        color: "red",
+        ...errorNotificationOptions,
+        message: "Сертификат не был добавлен",
       });
     }
   };
@@ -105,15 +118,16 @@ export const RootCertificate = () => {
             });
           if (data.data) {
             notifications.show({
-              title: "Успешно",
+              ...successNotificationOptions,
               message: "Сертификат удален",
-              icon: <IconCheck />,
-              position: "top-center",
-              color: "green",
             });
             await getRootCertificate();
           }
         } catch (error: unknown) {
+          notifications.show({
+            ...errorNotificationOptions,
+            message: "Сертификат не был удален",
+          });
           console.log("error", error);
         }
       },
@@ -141,7 +155,7 @@ export const RootCertificate = () => {
       />
       <Group justify="space-between" grow>
         <FileButton
-          accept="application/x-x509-ca-cert, application/x-pkcs7-certificates"
+          accept=".p7b,.crt,.cer"
           onChange={handleUploadRootCertificate}
         >
           {(props) => (
@@ -158,6 +172,15 @@ export const RootCertificate = () => {
           Удалить
         </Button>
       </Group>
+      <Text>
+        <a
+          style={{ textDecoration: "none", color: colors.blue[6] }}
+          target="_blank"
+          href="https://testca.cryptopro.ru/certsrv/certcarc.asp"
+        >
+          Скачать сертификат ЦС или цепочку сертификатов ЦС
+        </a>
+      </Text>
     </Flex>
   );
 };

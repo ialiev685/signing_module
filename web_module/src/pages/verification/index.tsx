@@ -42,6 +42,7 @@ export const Verification = () => {
     setDecodedData(undefined);
     setDocuments(undefined);
     setSignatures(undefined);
+    setError(undefined);
   };
 
   const content = decodedData ? (
