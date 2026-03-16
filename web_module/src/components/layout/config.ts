@@ -15,7 +15,11 @@ export const navItems: NavItem[] = [
     title: "Корневые сертификаты",
   },
   {
-    link: routes.trustedCertificates,
+    link: routes.middleCertificates,
     title: "Промежуточные сертификаты",
+  },
+  {
+    link: routes.createHash,
+    title: "Рассчитать хэш",
   },
 ];

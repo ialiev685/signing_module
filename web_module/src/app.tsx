@@ -8,6 +8,7 @@ import { routes } from "@/routes";
 import { RootCertificates } from "@/pages/root-certificates";
 import { Container } from "@mantine/core";
 import { MiddleCertificates } from "@/pages/middle-certificate";
+import { CreateHash } from "@/pages/create-hash";
 
 const router = createBrowserRouter([
   {
@@ -29,8 +30,12 @@ const router = createBrowserRouter([
         element: <RootCertificates />,
       },
       {
-        path: routes.trustedCertificates,
+        path: routes.middleCertificates,
         element: <MiddleCertificates />,
+      },
+      {
+        path: routes.createHash,
+        element: <CreateHash />,
       },
     ],
   },
