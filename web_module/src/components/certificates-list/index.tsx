@@ -1,53 +1,28 @@
 import {
   FileButton,
   Flex,
-  Title,
   Button,
   useMantineTheme,
-  Text,
   Group,
 } from "@mantine/core";
 import { api } from "@/services/client";
 import { StoreNamePathModel, type CertificateInfoModel } from "@/services/Api";
 import { useEffect, useState } from "react";
-import { getNameFromSubjectName } from "./lib";
-import { notifications, type NotificationData } from "@mantine/notifications";
-import { IconX, IconCheck } from "@tabler/icons-react";
-import { DataTable, type DataTableColumn } from "mantine-datatable";
+
+import { notifications } from "@mantine/notifications";
+import { DataTable } from "mantine-datatable";
 import { modals } from "@mantine/modals";
+import {
+  columns,
+  errorNotificationOptions,
+  successNotificationOptions,
+} from "./config";
 
-const columns: DataTableColumn<CertificateInfoModel>[] = [
-  {
-    accessor: "subject",
-    title: "Имя субъкта",
-    render: ({ subject_name }) => (
-      <Text truncate maw={190} size="xs">
-        {getNameFromSubjectName(subject_name)}
-      </Text>
-    ),
-  },
-  {
-    accessor: "thumbprint",
-    title: "Отпечаток",
-    render: ({ thumbprint }) => <Text size="xs">{thumbprint}</Text>,
-  },
-];
-
-const errorNotificationOptions: Partial<NotificationData> = {
-  icon: <IconX />,
-  title: "Ошибка",
-  position: "top-center",
-  color: "red",
+type CertificatesListProps = {
+  storeName: StoreNamePathModel;
 };
 
-const successNotificationOptions: Partial<NotificationData> = {
-  icon: <IconCheck />,
-  title: "Успешно",
-  position: "top-center",
-  color: "green",
-};
-
-export const RootCertificate = () => {
+export const CertificatesList = ({ storeName }: CertificatesListProps) => {
   const [selectedThumbprint, setSelectedThumbprint] = useState<
     string | undefined
   >(undefined);
@@ -58,7 +33,7 @@ export const RootCertificate = () => {
     try {
       const { data } =
         await api.getRootCertificatesApiV1GetRootCertificatesStoreNameGet(
-          StoreNamePathModel.MRoot,
+          storeName,
         );
 
       setData(data.data ?? []);
@@ -82,7 +57,7 @@ export const RootCertificate = () => {
     try {
       const { data } =
         await api.setPersonalCertificatesApiV1SetCertificateStoreNamePost(
-          StoreNamePathModel.MRoot,
+          storeName,
           { certificate: file },
         );
       if (data.data) {
@@ -114,7 +89,7 @@ export const RootCertificate = () => {
           const { data } =
             await api.removeCertificateApiV1RemoveCertificatePost({
               thumbprint: selectedThumbprint,
-              store_name: StoreNamePathModel.MRoot,
+              store_name: storeName,
             });
           if (data.data) {
             notifications.show({
@@ -136,8 +111,6 @@ export const RootCertificate = () => {
 
   return (
     <Flex direction="column" gap={24}>
-      <Title order={4}>Корневые сертификаты</Title>
-
       <DataTable
         rowBackgroundColor={(record) =>
           selectedThumbprint === record.thumbprint ? colors.cyan[4] : undefined
@@ -172,15 +145,6 @@ export const RootCertificate = () => {
           Удалить
         </Button>
       </Group>
-      <Text>
-        <a
-          style={{ textDecoration: "none", color: colors.blue[6] }}
-          target="_blank"
-          href="https://testca.cryptopro.ru/certsrv/certcarc.asp"
-        >
-          Скачать сертификат ЦС или цепочку сертификатов ЦС
-        </a>
-      </Text>
     </Flex>
   );
 };
