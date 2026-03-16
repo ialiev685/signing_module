@@ -12,6 +12,7 @@ import {
 } from "@mantine/core";
 import { useState } from "react";
 import { getCertificateContentBar, getSignatureContentBar } from "./lib";
+import { isErrorResponse } from "@/utils/lib";
 
 export const Verification = () => {
   const { colors } = useMantineTheme();
@@ -34,7 +35,9 @@ export const Verification = () => {
         setError(data.error);
       }
     } catch (error: unknown) {
-      console.error("error", error);
+      if (isErrorResponse(error)) {
+        console.log("error", error.error);
+      }
     }
   };
 

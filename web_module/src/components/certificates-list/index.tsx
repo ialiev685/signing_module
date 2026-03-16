@@ -17,6 +17,7 @@ import {
   errorNotificationOptions,
   successNotificationOptions,
 } from "./config";
+import { isErrorResponse } from "@/utils/lib";
 
 type CertificatesListProps = {
   storeName: StoreNamePathModel;
@@ -38,7 +39,10 @@ export const CertificatesList = ({ storeName }: CertificatesListProps) => {
 
       setData(data.data ?? []);
     } catch (error: unknown) {
-      console.log("error", error);
+      if (isErrorResponse(error)) {
+        console.log("error", error.error);
+      }
+
       setData([]);
       notifications.show({
         ...errorNotificationOptions,
@@ -68,7 +72,9 @@ export const CertificatesList = ({ storeName }: CertificatesListProps) => {
         await getRootCertificate();
       }
     } catch (error: unknown) {
-      console.log("error", error);
+      if (isErrorResponse(error)) {
+        console.log("error", error.error);
+      }
       notifications.show({
         ...errorNotificationOptions,
         message: "Сертификат не был добавлен",
@@ -103,7 +109,9 @@ export const CertificatesList = ({ storeName }: CertificatesListProps) => {
             ...errorNotificationOptions,
             message: "Сертификат не был удален",
           });
-          console.log("error", error);
+          if (isErrorResponse(error)) {
+            console.log("error", error.error);
+          }
         }
       },
     });
