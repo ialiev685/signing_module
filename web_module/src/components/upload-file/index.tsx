@@ -6,7 +6,7 @@ import { FileCard } from "../file-card";
 
 const fileExpansion = {
   p7s: "application/pkcs7-signature",
-  sig: "application/pgp-signature",
+  sig: ".sig",
   pdf: MIME_TYPES.pdf,
   jpeg: MIME_TYPES.jpeg,
   png: MIME_TYPES.png,
