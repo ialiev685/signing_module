@@ -1,7 +1,7 @@
 from pycades_api.signed_data_processor import SignedDataProcessor
 from pycades_engine import pycades_engine
 from models_types import VerificationModel, ResponseDataModel
-
+from .parse_crypto_error_code import parse_crypto_error_code
 from services.decode_detached_signature import DecodeDetachedSignature
 
 
@@ -41,9 +41,15 @@ def verify_signature_by_hash(
             signature_bytes=signed_message_bytes,
         )
 
+        error_from_decode = (
+            "\n" + "\n".join(decoded_detached_signature.error)
+            if len(decoded_detached_signature.error) > 0
+            else ""
+        )
+
         return ResponseDataModel(
             has_error=True,
-            error=str(error) + "\n" + "\n".join(decoded_detached_signature.error),
+            error=parse_crypto_error_code(str(error)) + error_from_decode,
             data=VerificationModel(
                 is_valid=False,
                 result=decoded_detached_signature.signing_structure,

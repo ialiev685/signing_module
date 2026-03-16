@@ -2,6 +2,7 @@ import subprocess
 
 from models_types import ResponseDataModel, StoreName
 from utils.parse_certmgr_output import parse_certmgr_output
+from .parse_crypto_error_code import parse_crypto_error_code
 
 
 def remove_certificate_from_store(
@@ -28,7 +29,9 @@ def remove_certificate_from_store(
         )
     except Exception as error:
         print("Ошибка при сохранении данных сертификата в стор через консоль: ", error)
-        return ResponseDataModel(has_error=True, error=error, data=None)
+        return ResponseDataModel(
+            has_error=True, error=parse_crypto_error_code(str(error)), data=None
+        )
     # через pycades вызов данных стора не отрабатывают корректно
 
     # store = pycades_engine.Store()
