@@ -82,7 +82,7 @@ export const Verification = () => {
       {content}
       <Button
         disabled={!documents || !signatures}
-        color={colors.cyan[5]}
+        color={colors.blue[5]}
         onClick={decodedData ? handleClear : handleVerification}
       >
         {decodedData ? "Назад" : "Проверить"}

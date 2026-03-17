@@ -140,7 +140,7 @@ export const CertificatesList = ({ storeName }: CertificatesListProps) => {
           onChange={handleUploadRootCertificate}
         >
           {(props) => (
-            <Button {...props} color={colors.cyan[5]}>
+            <Button {...props} color={colors.blue[5]}>
               Добавить
             </Button>
           )}
