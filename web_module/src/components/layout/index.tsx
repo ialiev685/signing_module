@@ -9,7 +9,7 @@ export const Layout = () => {
   return (
     <AppShell header={{ height: 60 }}>
       <AppShell.Header p={12} bg={colors.gray[8]}>
-        <Title order={2} c={colors.yellow[0]}>
+        <Title order={2} c="#FFF">
           Модуль проверки подписания
         </Title>
       </AppShell.Header>
