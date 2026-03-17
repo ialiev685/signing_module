@@ -38,9 +38,9 @@ COPY . .
 COPY requirements.txt .
 
 # Доверенные промежуточные сертификаты
-# RUN /opt/cprocsp/bin/amd64/certmgr -install -cert -store uCA -file /app/trusted_certificates/ca.p7b -all
+RUN /opt/cprocsp/bin/amd64/certmgr -install -cert -store uCA -file /app/trusted_certificates/ca.p7b -all
 # Корневые сертификаты
-# RUN /opt/cprocsp/bin/amd64/certmgr -inst -store mRoot -f /app/trusted_certificates/certnew.p7b -all
+RUN /opt/cprocsp/bin/amd64/certmgr -inst -store mRoot -f /app/trusted_certificates/certnew.p7b -all
 
 
 RUN pip install --no-cache-dir -r requirements.txt
