@@ -23,7 +23,7 @@ jobs:
       - name: Deploy via Docker Compose
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
-          cd /root/github/all_inc_site && \
+          cd /root/github/signing_module && \
           git pull origin main && \
           chmod +x deploy.sh && \
           ./deploy.sh
