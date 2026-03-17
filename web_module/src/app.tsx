@@ -2,13 +2,17 @@ import { Layout } from "@components/layout";
 import "./fonts/fonts.css";
 import "./app.css";
 
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+} from "react-router-dom";
 import { Verification } from "@/pages/verification";
 import { routes } from "@/routes";
 import { RootCertificates } from "@/pages/root-certificates";
 import { Container } from "@mantine/core";
 import { MiddleCertificates } from "@/pages/middle-certificate";
-import { CreateHash } from "@/pages/create-hash";
+// import { CreateHash } from "@/pages/create-hash";
 
 const router = createBrowserRouter([
   {
@@ -22,6 +26,10 @@ const router = createBrowserRouter([
     ),
     children: [
       {
+        index: true,
+        element: <Navigate to={routes.verificationSignature} />,
+      },
+      {
         path: routes.verificationSignature,
         element: <Verification />,
       },
@@ -33,9 +41,14 @@ const router = createBrowserRouter([
         path: routes.middleCertificates,
         element: <MiddleCertificates />,
       },
+
+      // {
+      //   path: routes.createHash,
+      //   element: <CreateHash />,
+      // },
       {
-        path: routes.createHash,
-        element: <CreateHash />,
+        path: "*",
+        element: <Navigate to="/" replace />,
       },
     ],
   },
