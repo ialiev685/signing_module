@@ -7,7 +7,7 @@ docker-compose up -d --build
 cd web_module
 export NODE_ENV=production
 
-yarn install --frozen-lockfile --force
+yarn install --frozen-lockfile
 yarn build
 
 sudo mkdir -p /var/www/signature-verification.net.ru
