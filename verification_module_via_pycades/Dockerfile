@@ -45,8 +45,8 @@ COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-# для dev режима
-# CMD ["fastapi", "run", "main.py"]
-
 # для prod режима
-CMD ["fastapi", "dev", "main.py", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["fastapi", "run", "main.py", "--host", "0.0.0.0", "--port", "8000"]
+
+# для dev режима
+# CMD ["fastapi", "dev", "main.py", "--host", "0.0.0.0", "--port", "8000"]

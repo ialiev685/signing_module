@@ -15,7 +15,9 @@ services:
     environment:
       - PYTHONPATH=/app/lib/pycades
     # для dev режима
-    command: fastapi dev main.py --host 0.0.0.0 --port 8000 --reload
+    # command: fastapi dev main.py --host 0.0.0.0 --port 8000 --reload
+    # для prod режима
+    command: fastapi run main.py --host 0.0.0.0 --port 8000
     restart: unless-stopped
 
 
