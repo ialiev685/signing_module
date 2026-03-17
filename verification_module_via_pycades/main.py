@@ -10,7 +10,8 @@ app.include_router(router)
 
 origins = [
     "http://localhost",
-    "http://localhost:3000",
+    "https://signature-verification.net.ru",
+    "https://www.signature-verification.net.ru",
 ]
 
 app.add_middleware(
