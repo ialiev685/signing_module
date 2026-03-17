@@ -5,7 +5,6 @@ set -e  # Останавливаем скрипт при любой ошибке
 docker-compose down
 docker-compose up -d --build
 cd web_module
-export NODE_ENV=production
 
 yarn install --frozen-lockfile
 yarn build
